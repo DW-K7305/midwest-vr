@@ -1,0 +1,199 @@
+═══════════════════════════════════════════════════════════════
+                  MidWest-VR — Quick Start
+═══════════════════════════════════════════════════════════════
+
+You don't need to know any code. After one-time Setup,
+launching the app is just a double-click.
+
+Your SSD is named "SandSpd-EX" and the project lives at:
+
+    /Volumes/SandSpd-EX/MidWest-VR/
+
+⚠️  IMPORTANT — your work Mac may have Terminal blocked.
+That's fine. The Setup step needs Terminal, but the App
+itself does NOT. So Setup happens once on a DIFFERENT Mac,
+then you carry the SSD to your work Mac and just double-click.
+
+Read which path applies to you below, then follow only that
+path.
+
+───────────────────────────────────────────────────────────────
+WHICH PATH IS MINE?
+───────────────────────────────────────────────────────────────
+
+Try this on your work Mac: Press Cmd+Space, type "Terminal",
+press Return.
+
+  ✅ Terminal opens normally → Path A (one Mac).
+  🚫 Terminal blocked, won't open, locked by IT → Path B (two Macs).
+
+If unsure, assume Path B. It's safer.
+
+═══════════════════════════════════════════════════════════════
+                       PATH A — ONE MAC
+              (Terminal is allowed on this Mac)
+═══════════════════════════════════════════════════════════════
+
+STEP 1 — Confirm the project folder is on the SSD at:
+             /Volumes/SandSpd-EX/MidWest-VR/
+
+         Open Finder, press Cmd+Shift+G, paste that path,
+         and press Return. You should see files like
+         "1 - READ ME FIRST.txt" and "2 - Start Here.command".
+
+STEP 2 — In that folder, double-click "2 - Start Here.command".
+
+         If macOS warns "unidentified developer":
+           Right-click the file → Open → Open
+
+         When the script asks, type YES and press Return.
+         Wait ~10 minutes while it compiles.
+
+STEP 3 — When you see "✅  Setup complete", close Terminal.
+         "MidWest-VR.app" is now in
+         /Volumes/SandSpd-EX/MidWest-VR/.
+         Double-click MidWest-VR.app.
+
+That's it. Future launches: just double-click MidWest-VR.app.
+
+═══════════════════════════════════════════════════════════════
+                      PATH B — TWO MACS
+        (Terminal is blocked on your work computer)
+═══════════════════════════════════════════════════════════════
+
+This path NEVER touches your work Mac with anything that
+needs admin or Terminal. The work Mac only ever runs the
+finished App from the SSD by double-click.
+
+You'll need temporary access to ANY Mac with Terminal — your
+home Mac, a friend's Mac, a Mac at an Apple Store/library, an
+older personal Mac in a closet. It can be Intel or Apple
+Silicon, macOS 13 or newer. You only need it for ~10 minutes,
+once. Apple Silicon (M-series) is preferred so the compiled
+app runs at full speed on your work Mac (which is M4).
+
+──── DO THIS ON THE OTHER MAC, ONCE ──────────────────────────
+
+STEP B1 — Plug the SandSpd-EX SSD into the other Mac.
+
+STEP B2 — Open Finder, press Cmd+Shift+G, paste this path
+          and press Return:
+              /Volumes/SandSpd-EX/MidWest-VR/
+
+STEP B3 — Double-click "2 - Start Here.command".
+
+          If macOS warns "unidentified developer":
+            Right-click the file → Open → Open
+
+          When the script asks, type YES and press Return.
+          Wait ~10 minutes for the colored output to finish.
+          When you see "✅  Setup complete", close Terminal.
+          MidWest-VR.app is now in
+          /Volumes/SandSpd-EX/MidWest-VR/.
+
+STEP B4 — Eject the SSD from the other Mac (right-click drive
+          in Finder → Eject). Unplug it.
+
+──── DO THIS ON YOUR WORK MAC ────────────────────────────────
+
+STEP B5 — Plug the SSD into your work Mac.
+
+STEP B6 — Open Finder, press Cmd+Shift+G, paste:
+              /Volumes/SandSpd-EX/MidWest-VR/
+
+          Double-click "MidWest-VR.app".
+
+          If macOS warns "unidentified developer":
+            Right-click MidWest-VR.app → Open → Open
+
+That's it. Future days: just plug in the SSD and double-click
+MidWest-VR.app. No Terminal involved on the work Mac, ever.
+
+═══════════════════════════════════════════════════════════════
+SAFETY ON A WORK MAC — READ THIS
+═══════════════════════════════════════════════════════════════
+
+What runs at runtime on your work Mac:
+
+  ▸ MidWest-VR.app — a normal Mac application living on the
+    SSD at /Volumes/SandSpd-EX/MidWest-VR/MidWest-VR.app.
+    Launches in your user account. No admin password.
+  ▸ A bundled "adb" inside the app, used to talk to Quest 2
+    headsets over USB. Standard Android tool.
+  ▸ Reads/writes one config file: MidWest-VR.config.json
+    (next to the app, on the SSD).
+
+What does NOT happen on your work Mac:
+
+  ✗ No system-wide install.
+  ✗ No admin password prompt.
+  ✗ No Homebrew, no Xcode tools, no Rust, no Node.
+  ✗ No network calls from the app itself.
+  ✗ No iCloud, no keychain, no files outside the SSD folder.
+  ✗ No background process or login item.
+
+Things you SHOULD check with your IT department first:
+
+  • Is connecting USB peripherals (specifically Meta Quest 2
+    headsets in Developer Mode) allowed on your work Mac?
+    Some MDM-managed Macs block USB Accessories.
+  • Is running a non-App-Store, ad-hoc-signed app from a
+    USB drive allowed by your acceptable-use policy?
+  • Some EDR (security) tools log adb processes. That's
+    expected and normal — adb is a widely used Android tool.
+
+For the deeper details, read docs/SAFETY.md.
+
+═══════════════════════════════════════════════════════════════
+STEP — CONNECT YOUR FIRST HEADSET
+═══════════════════════════════════════════════════════════════
+
+Inside the app, click "Connect" in the left sidebar. The
+page walks you through enabling Developer Mode on a Quest 2
+and plugging it in. About 90 seconds per headset, one time.
+
+Printable version:  docs/CONNECT_HEADSETS.md
+Tick-box version:   docs/CLASSROOM_CHECKLIST.md
+
+═══════════════════════════════════════════════════════════════
+THINGS YOU MIGHT WONDER ABOUT
+═══════════════════════════════════════════════════════════════
+
+▸ "I don't have access to a second Mac. Now what?"
+  Options, easiest first:
+   1. Borrow one for 10 minutes (a friend, a relative, a
+      neighbor — any Mac with macOS 13+).
+   2. Apple Store / public library Macs sometimes work.
+   3. Ask your IT to do the Setup step on a sandboxed Mac.
+   4. Cloud Mac services (MacInCloud, MacStadium) — overkill
+      but real options.
+
+▸ "I can't see MidWest-VR.app in
+   /Volumes/SandSpd-EX/MidWest-VR/."
+  Setup hasn't run successfully yet. Re-run the Setup step
+  on the OTHER Mac (Path B Step B3).
+
+▸ "Setup says some download failed."
+  Likely a school firewall blocking GitHub or Google. Try a
+  home network for the one-time Setup.
+
+▸ "Where does MidWest-VR save its settings?"
+  In MidWest-VR.config.json next to MidWest-VR.app on the
+  SSD. Plug the SSD into a different Mac, your settings
+  come with you. (Details: docs/PORTABLE_SSD.md.)
+
+▸ "My SSD shows up as a different name in Finder."
+  If the SSD isn't actually named "SandSpd-EX" the path will
+  be different — replace SandSpd-EX with whatever name shows
+  up under /Volumes/ on your Mac. Run this on a Mac with
+  Terminal: `ls /Volumes/` to list every connected drive.
+
+▸ "Will running the app leave a mess on my work Mac?"
+  No. Nothing is installed. Unplug the SSD and the work Mac
+  has zero trace of MidWest-VR. (Read docs/SAFETY.md.)
+
+▸ "I want to update the app later."
+  Re-run the Setup step on your other Mac. Or just keep
+  using the build you have — there's no auto-update.
+
+═══════════════════════════════════════════════════════════════
