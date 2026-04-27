@@ -1,0 +1,132 @@
+name: Build MidWest-VR for macOS
+
+# Runs on Apple's free macOS Apple Silicon cloud runners.
+# Adapted for the case where the project sits inside a "Project VR 26"
+# subfolder of the repo (which is how the drag-and-drop upload landed).
+
+on:
+  push:
+  workflow_dispatch: {}
+
+defaults:
+  run:
+    working-directory: "Project VR 26"
+
+jobs:
+  build:
+    name: Build .app on Apple Silicon
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+          run_install: false
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - name: Cache cargo registry & build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            Project VR 26/src-tauri/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Project VR 26/src-tauri/Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Download Google platform-tools adb
+        run: |
+          mkdir -p src-tauri/resources/adb-tools
+          curl -fL --retry 3 -o /tmp/pt.zip \
+            https://dl.google.com/android/repository/platform-tools-latest-darwin.zip
+          unzip -q /tmp/pt.zip -d /tmp
+          cp /tmp/platform-tools/adb src-tauri/resources/adb-tools/adb
+          for f in /tmp/platform-tools/*.dylib; do
+            [ -e "$f" ] && cp "$f" src-tauri/resources/adb-tools/ || true
+          done
+          chmod +x src-tauri/resources/adb-tools/adb
+          xattr -cr src-tauri/resources/adb-tools 2>/dev/null || true
+          src-tauri/resources/adb-tools/adb version
+
+      - name: Generate placeholder icons (if missing)
+        run: |
+          if [ ! -f src-tauri/icons/icon.icns ]; then
+            mkdir -p src-tauri/icons
+            python3 - <<'PY'
+          import struct, zlib, math
+          W = H = 1024
+          def chunk(t, d):
+              return struct.pack(">I", len(d)) + t + d + struct.pack(">I", zlib.crc32(t+d) & 0xffffffff)
+          buf = bytearray()
+          cx, cy = W/2, H/2
+          for y in range(H):
+              buf.append(0)
+              for x in range(W):
+                  dx, dy = (x-cx)/cx, (y-cy)/cy
+                  d = math.sqrt(dx*dx+dy*dy)
+                  t = max(0.0, 1.0-d)
+                  r = int(40 + 60*t); g = int(20 + 30*t); b = int(80 + 130*t)
+                  for ox in (-0.22, 0.22):
+                      ddx = (x-(cx+ox*cx))/(cx*0.18)
+                      ddy = (y-cy)/(cy*0.18)
+                      if ddx*ddx + ddy*ddy < 1.0:
+                          r = int(r*0.35); g = int(g*0.35); b = int(b*0.55+40)
+                  buf.append(r); buf.append(g); buf.append(b)
+          sig = b"\x89PNG\r\n\x1a\n"
+          ihdr = struct.pack(">IIBBBBB", W, H, 8, 2, 0, 0, 0)
+          idat = zlib.compress(bytes(buf), 9)
+          png = sig + chunk(b"IHDR", ihdr) + chunk(b"IDAT", idat) + chunk(b"IEND", b"")
+          open("src-tauri/icons/_source.png", "wb").write(png)
+          PY
+          fi
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli --version "^2.0.0" --locked
+
+      - name: Generate icon set from source
+        run: |
+          if [ ! -f src-tauri/icons/icon.icns ]; then
+            cargo tauri icon src-tauri/icons/_source.png --output src-tauri/icons
+          fi
+
+      - name: Install JS dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build Tauri release
+        run: pnpm tauri build --target aarch64-apple-darwin
+
+      - name: Ad-hoc sign and de-quarantine
+        run: |
+          APP="src-tauri/target/aarch64-apple-darwin/release/bundle/macos/MidWest-VR.app"
+          codesign --force --deep --sign - --options runtime --timestamp=none "$APP"
+          xattr -dr com.apple.quarantine "$APP" 2>/dev/null || true
+          codesign --verify --deep --strict --verbose=2 "$APP" || true
+
+      - name: Zip the .app for download
+        run: |
+          cd src-tauri/target/aarch64-apple-darwin/release/bundle/macos
+          ditto -c -k --keepParent MidWest-VR.app MidWest-VR-macos.zip
+          ls -lh MidWest-VR-macos.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MidWest-VR-macos
+          path: "Project VR 26/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/MidWest-VR-macos.zip"
+          if-no-files-found: error
+          retention-days: 30
