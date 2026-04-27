@@ -27,7 +27,9 @@ pub enum AppError {
 }
 
 impl Serialize for AppError {
-    fn serialize<S>(&self, s: S) -> Result<S::Ok, S::Error>
+    // NOTE: spell out std::result::Result here because our own `Result` alias
+    // (defined at the bottom of this file) only takes one type parameter.
+    fn serialize<S>(&self, s: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
