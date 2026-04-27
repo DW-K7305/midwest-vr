@@ -22,6 +22,17 @@ pub struct AppSettings {
     pub theme: Theme,
     /// If set, overrides the auto-detected portable/system mode.
     pub config_dir_override: Option<PathBuf>,
+    /// Master switch for the online catalog (Discover tab). Default OFF.
+    /// When OFF the app makes zero outbound network requests.
+    #[serde(default)]
+    pub online_catalog_enabled: bool,
+    /// Catalog index URL. Must point at an allowlisted host.
+    #[serde(default = "default_catalog_url")]
+    pub catalog_url: String,
+}
+
+fn default_catalog_url() -> String {
+    crate::catalog::DEFAULT_CATALOG_URL.to_string()
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
@@ -39,6 +50,8 @@ impl Default for AppSettings {
             auto_select_first_device: true,
             theme: Theme::Dark,
             config_dir_override: None,
+            online_catalog_enabled: false,
+            catalog_url: default_catalog_url(),
         }
     }
 }

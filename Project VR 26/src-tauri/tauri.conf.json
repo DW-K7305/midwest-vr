@@ -46,8 +46,8 @@
       "icons/icon.icns"
     ],
     "resources": {
-     "resources/adb-tools/adb": "adb-tools/adb"
-   },
+      "resources/adb-tools/adb": "adb-tools/adb"
+    },
     "category": "DeveloperTool",
     "shortDescription": "Meta Quest 2 fleet manager",
     "longDescription": "Locally-managed device, app, and kiosk control for Meta Quest 2 headsets.",

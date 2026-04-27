@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import {
   Activity,
   Boxes,
+  Compass,
   Lock,
   Wifi,
   Settings as SettingsIcon,
@@ -13,6 +14,7 @@ import { useDevices } from "@/hooks/useDevices";
 const NAV = [
   { to: "/", label: "Dashboard", icon: Activity, exact: true },
   { to: "/connect", label: "Connect", icon: Plug },
+  { to: "/discover", label: "Discover", icon: Compass },
   { to: "/apps", label: "Apps", icon: Boxes },
   { to: "/kiosk", label: "Kiosk", icon: Lock },
   { to: "/wifi", label: "Wi-Fi", icon: Wifi },

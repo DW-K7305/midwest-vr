@@ -5,8 +5,12 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import type {
   AppSettings,
+  BatchEvent,
+  Catalog,
+  CatalogApp,
   Device,
   InstalledApp,
+  NetworkLogEntry,
   StorageInfo,
   WifiCreds,
 } from "@/types";
@@ -47,7 +51,27 @@ export const api = {
 
   // Health
   adbHealth: () => invoke<string>("adb_health"),
+
+  // Catalog / Discovery
+  catalogRefresh: () => invoke<Catalog>("catalog_refresh"),
+  catalogGetCached: () => invoke<Catalog | null>("catalog_get_cached"),
+  catalogRecommended: () => invoke<CatalogApp[]>("catalog_recommended"),
+  discoverInstall: (appId: string, serials: string[]) =>
+    invoke<void>("discover_install", { appId, serials }),
+  discoverInstallRecommendedPack: (serials: string[]) =>
+    invoke<void>("discover_install_recommended_pack", { serials }),
+
+  // Network log + allowlist
+  networkLog: () => invoke<NetworkLogEntry[]>("network_log"),
+  networkClearLog: () => invoke<void>("network_clear_log"),
+  networkAllowedHosts: () => invoke<string[]>("network_allowed_hosts"),
 };
+
+export function onDiscoverEvent(
+  fn: (e: BatchEvent) => void
+): Promise<UnlistenFn> {
+  return listen<BatchEvent>("discover_event", (evt) => fn(evt.payload));
+}
 
 export interface InstallProgressEvent {
   serial: string;

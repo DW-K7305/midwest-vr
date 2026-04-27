@@ -21,13 +21,29 @@ path.
 WHICH PATH IS MINE?
 ───────────────────────────────────────────────────────────────
 
-Try this on your work Mac: Press Cmd+Space, type "Terminal",
-press Return.
+  ⭐ Path C — BROWSER ONLY (no Terminal, no other Mac).
+     Use this if Terminal is blocked AND you don't have access
+     to another Mac. Apple's cloud Macs do the build for you
+     while you wait. Needs only a working web browser and
+     access to github.com.
+     → See docs/BUILD_VIA_GITHUB.md for click-by-click steps.
 
-  ✅ Terminal opens normally → Path A (one Mac).
-  🚫 Terminal blocked, won't open, locked by IT → Path B (two Macs).
+  Path A — One Mac with Terminal access (your work Mac, if
+     allowed). Run Setup right here on this Mac.
 
-If unsure, assume Path B. It's safer.
+  Path B — Two Macs. Setup on a different (personal) Mac, run
+     on your work Mac.
+
+To check whether Path A applies to your work Mac: press
+Cmd+Space, type "Terminal", press Return.
+
+  ✅ Terminal opens normally → Path A is available.
+  🚫 Terminal blocked, won't open, locked by IT → use Path C
+     (or Path B if you can borrow another Mac).
+
+If you don't have another Mac AND Terminal is blocked here,
+**Path C is for you**. Stop reading the rest of this file and
+open docs/BUILD_VIA_GITHUB.md.
 
 ═══════════════════════════════════════════════════════════════
                        PATH A — ONE MAC

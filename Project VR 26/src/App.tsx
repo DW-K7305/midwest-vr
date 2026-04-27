@@ -3,6 +3,7 @@ import { TitleBar } from "@/components/TitleBar";
 import { Sidebar } from "@/components/Sidebar";
 import { Dashboard } from "@/pages/Dashboard";
 import { Connect } from "@/pages/Connect";
+import { Discover } from "@/pages/Discover";
 import { Apps } from "@/pages/Apps";
 import { Kiosk } from "@/pages/Kiosk";
 import { WifiPage } from "@/pages/WiFi";
@@ -19,6 +20,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/connect" element={<Connect />} />
+            <Route path="/discover" element={<Discover />} />
             <Route path="/apps" element={<Apps />} />
             <Route path="/kiosk" element={<Kiosk />} />
             <Route path="/wifi" element={<WifiPage />} />

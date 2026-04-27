@@ -59,13 +59,43 @@ Plugging the SSD into your work Mac and double-clicking
 
 ## Network behavior at runtime
 
-**The app itself makes no outgoing network connections.** It does not
-phone home, check for updates, log telemetry, or fetch ads.
+**By default, the app makes zero outgoing network connections.** It does
+not phone home, check for updates, log telemetry, or fetch ads. The
+"Online catalog" toggle in Settings is **OFF by default**.
 
 `adb`, when running, listens on `127.0.0.1:5037` (the standard ADB
 server port — localhost only). It also opens USB connections to
 attached Android-class devices (your Quest 2 headsets). It does not
 make outbound network connections.
+
+### Optional: Discover / online catalog
+
+When the user explicitly enables **Settings → Online catalog**, the app
+makes outbound HTTPS requests, but **only to a hardcoded allowlist**
+defined in `src-tauri/src/network.rs`:
+
+- `raw.githubusercontent.com` — fetches the curated catalog JSON
+- `github.com` and `objects.githubusercontent.com` — direct APK downloads
+  for open-source apps in the catalog (e.g. Open Brush)
+- `cdn.sidequestvr.com` and `files.sidequestvr.com` — APK downloads
+  for SideQuest-distributed reputable apps
+- `dl.google.com` — already used to obtain the bundled `adb`
+
+**Anything not on this list is rejected at the network layer** before
+any socket opens. The allowlist is hardcoded in Rust and is not
+configurable from the frontend or settings file. Every outbound
+request — allowed or rejected — is recorded in an in-memory ring buffer
+that the user (and IT) can audit live in Settings → Network activity log.
+
+**Things the app still does NOT do, even with the catalog enabled:**
+
+- No telemetry, analytics, error reporting, or session tracking.
+- No accounts, sign-in, email collection, or PII of any kind.
+- No automatic updates of MidWest-VR itself.
+- No outbound traffic when the toggle is OFF.
+
+All APK downloads are SHA256-verified against the catalog's expected
+hash before being installed onto a headset.
 
 Some EDR tools may log the `adb` process starting and notice the
 loopback bind. This is expected behavior of the standard Android
@@ -130,11 +160,17 @@ A short email template:
 > - The app is compiled on my home Mac, not the work Mac.
 > - On the work Mac it runs in user space — no installer, no admin,
 >   no system changes.
-> - It makes no outgoing network connections.
+> - The optional "Discover" feature, if I enable it, makes outbound
+>   HTTPS requests only to a hardcoded allowlist (raw.githubusercontent.com,
+>   github.com, objects.githubusercontent.com, cdn.sidequestvr.com,
+>   files.sidequestvr.com, dl.google.com). All other outbound traffic is
+>   rejected at the application layer. No telemetry, accounts, or PII.
+> - With Discover disabled, the app makes zero outbound connections.
 > - It uses `adb` (the standard Android USB tool) bundled inside its
 >   app bundle. ADB binds to 127.0.0.1:5037 and talks to USB-attached
 >   Meta Quest 2 headsets only.
-> - All app config lives on my SSD.
+> - All app config and the network activity log live on my SSD or in
+>   memory — never sent off-device.
 >
 > I'd appreciate confirmation that USB Accessories permission and
 > Gatekeeper "right-click → Open" are allowed by current policy, and

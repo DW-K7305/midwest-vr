@@ -37,7 +37,59 @@ export interface AppSettings {
   auto_select_first_device: boolean;
   theme: Theme;
   config_dir_override: string | null;
+  online_catalog_enabled: boolean;
+  catalog_url: string;
 }
+
+export type InstallSource = "sideload" | "store";
+
+export interface CatalogApp {
+  id: string;
+  name: string;
+  publisher: string;
+  short_desc: string;
+  long_desc: string;
+  subjects: string[];
+  grade_bands: string[];
+  age_rating: string;
+  license: string;
+  source: InstallSource;
+  source_url: string;
+  apk_url: string | null;
+  apk_sha256: string | null;
+  apk_size_bytes: number | null;
+  package: string | null;
+  thumbnail_url: string | null;
+  screenshots: string[];
+  recommended: boolean;
+}
+
+export interface Catalog {
+  schema_version: number;
+  last_updated: string;
+  apps: CatalogApp[];
+}
+
+export interface NetworkLogEntry {
+  timestamp_ms: number;
+  method: string;
+  url: string;
+  host: string;
+  purpose: string;
+  allowed: boolean;
+  status: number | null;
+  bytes: number | null;
+  error: string | null;
+}
+
+export type BatchEvent =
+  | { type: "download_start"; app_id: string }
+  | { type: "download_progress"; app_id: string; downloaded: number; total: number }
+  | { type: "download_done"; app_id: string }
+  | { type: "headset_start"; app_id: string; serial: string }
+  | { type: "headset_line"; app_id: string; serial: string; line: string }
+  | { type: "headset_done"; app_id: string; serial: string }
+  | { type: "headset_fail"; app_id: string; serial: string; error: string };
 
 export interface StorageInfo {
   portable: boolean;

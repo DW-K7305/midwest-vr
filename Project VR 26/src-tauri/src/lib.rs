@@ -5,16 +5,22 @@
 
 mod adb;
 mod apps;
+mod catalog;
 mod devices;
+mod discover;
 mod error;
 mod kiosk;
+mod network;
 mod settings;
 mod wifi;
 
 use crate::adb::{ensure_server, resolve_adb_path};
 use crate::apps::InstalledApp;
+use crate::catalog::{Catalog, CatalogApp, CatalogStore};
 use crate::devices::Device;
+use crate::discover::BatchEvent;
 use crate::error::{AppError, Result};
+use crate::network::LogEntry as NetLogEntry;
 use crate::settings::{AppSettings, SettingsStore, StorageInfo};
 use crate::wifi::WifiCreds;
 use std::path::PathBuf;
@@ -24,6 +30,7 @@ use tauri::{AppHandle, Emitter, State};
 /// Shared app-wide state.
 pub struct AppState {
     pub settings: Arc<SettingsStore>,
+    pub catalog: Arc<CatalogStore>,
 }
 
 #[tauri::command]
@@ -141,6 +148,115 @@ async fn adb_health(app: AppHandle) -> Result<String> {
     Ok(v.lines().next().unwrap_or("").to_string())
 }
 
+// ----- Discovery / Catalog commands -----
+
+#[tauri::command]
+async fn catalog_refresh(state: State<'_, AppState>) -> Result<Catalog> {
+    let s = state.settings.snapshot();
+    if !s.online_catalog_enabled {
+        return Err(AppError::Config(
+            "Online catalog is disabled in Settings.".into(),
+        ));
+    }
+    state.catalog.refresh(&s.catalog_url).await
+}
+
+#[tauri::command]
+fn catalog_get_cached(state: State<'_, AppState>) -> Option<Catalog> {
+    state.catalog.snapshot()
+}
+
+#[tauri::command]
+fn catalog_recommended(state: State<'_, AppState>) -> Vec<CatalogApp> {
+    state
+        .catalog
+        .snapshot()
+        .map(|c| discover::recommended_sideload_apps(&c))
+        .unwrap_or_default()
+}
+
+#[tauri::command]
+async fn discover_install(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    app_id: String,
+    serials: Vec<String>,
+) -> Result<()> {
+    let s = state.settings.snapshot();
+    if !s.online_catalog_enabled {
+        return Err(AppError::Config(
+            "Online catalog is disabled in Settings.".into(),
+        ));
+    }
+    let cat = state
+        .catalog
+        .snapshot()
+        .ok_or_else(|| AppError::Config("Catalog not loaded — refresh first.".into()))?;
+    let entry = cat
+        .apps
+        .iter()
+        .find(|a| a.id == app_id)
+        .cloned()
+        .ok_or_else(|| AppError::Config(format!("Catalog entry '{}' not found.", app_id)))?;
+
+    let adb_path = resolve_adb_path(&app)?;
+    let app_handle = app.clone();
+    discover::install_to_many(&adb_path, &entry, &serials, move |evt: BatchEvent| {
+        let _ = app_handle.emit("discover_event", evt);
+    })
+    .await
+}
+
+#[tauri::command]
+async fn discover_install_recommended_pack(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    serials: Vec<String>,
+) -> Result<()> {
+    let s = state.settings.snapshot();
+    if !s.online_catalog_enabled {
+        return Err(AppError::Config(
+            "Online catalog is disabled in Settings.".into(),
+        ));
+    }
+    let cat = state
+        .catalog
+        .snapshot()
+        .ok_or_else(|| AppError::Config("Catalog not loaded — refresh first.".into()))?;
+    let recommended = discover::recommended_sideload_apps(&cat);
+    if recommended.is_empty() {
+        return Err(AppError::Config(
+            "No recommended sideload apps in current catalog.".into(),
+        ));
+    }
+    let adb_path = resolve_adb_path(&app)?;
+    let app_handle = app.clone();
+    for entry in recommended {
+        let h = app_handle.clone();
+        discover::install_to_many(&adb_path, &entry, &serials, move |evt| {
+            let _ = h.emit("discover_event", evt);
+        })
+        .await
+        .ok(); // continue with the next app even if one fails
+    }
+    Ok(())
+}
+
+#[tauri::command]
+fn network_log() -> Vec<NetLogEntry> {
+    network::snapshot_log()
+}
+
+#[tauri::command]
+fn network_clear_log() {
+    network::clear_log();
+}
+
+#[tauri::command]
+fn network_allowed_hosts() -> Vec<String> {
+    network::allowed_hosts()
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tracing_subscriber::fmt()
@@ -152,13 +268,21 @@ pub fn run() {
         .init();
 
     let settings = Arc::new(SettingsStore::load().expect("failed to load settings"));
+    // Cache catalog next to the config file so it travels with the SSD.
+    let catalog_cache_dir = settings
+        .info()
+        .config_path
+        .parent()
+        .map(|p| p.to_path_buf())
+        .unwrap_or_else(|| std::env::temp_dir());
+    let catalog = Arc::new(CatalogStore::new(catalog_cache_dir));
 
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_os::init())
-        .manage(AppState { settings })
+        .manage(AppState { settings, catalog })
         .invoke_handler(tauri::generate_handler![
             list_devices,
             device_info,
@@ -175,6 +299,14 @@ pub fn run() {
             get_storage_info,
             save_settings,
             adb_health,
+            catalog_refresh,
+            catalog_get_cached,
+            catalog_recommended,
+            discover_install,
+            discover_install_recommended_pack,
+            network_log,
+            network_clear_log,
+            network_allowed_hosts,
         ])
         .setup(|app| {
             // Ensure the bundled adb is executable. macOS preserves bits when
