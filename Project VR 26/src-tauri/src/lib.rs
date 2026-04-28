@@ -23,6 +23,7 @@ use crate::catalog::{Catalog, CatalogApp, CatalogStore};
 use crate::devices::Device;
 use crate::discover::BatchEvent;
 use crate::error::{AppError, Result};
+use crate::kiosk::KioskResult;
 use crate::launcher::{LauncherConfig, PushEvent as LauncherPushEvent};
 use crate::network::LogEntry as NetLogEntry;
 use crate::settings::{AppSettings, PairedHeadset, SettingsStore, StorageInfo};
@@ -122,6 +123,31 @@ async fn clear_kiosk(app: AppHandle, serial: String) -> Result<()> {
 async fn current_kiosk(app: AppHandle, serial: String) -> Result<Option<String>> {
     let adb_path = resolve_adb_path(&app)?;
     kiosk::current_kiosk(&adb_path, &serial).await
+}
+
+#[tauri::command]
+async fn set_kiosk_many(
+    app: AppHandle,
+    serials: Vec<String>,
+    package: String,
+) -> Result<Vec<KioskResult>> {
+    let adb_path = resolve_adb_path(&app)?;
+    Ok(kiosk::set_kiosk_many(&adb_path, &serials, &package).await)
+}
+
+#[tauri::command]
+async fn clear_kiosk_many(
+    app: AppHandle,
+    serials: Vec<String>,
+) -> Result<Vec<KioskResult>> {
+    let adb_path = resolve_adb_path(&app)?;
+    Ok(kiosk::clear_kiosk_many(&adb_path, &serials).await)
+}
+
+#[tauri::command]
+async fn launcher_is_installed(app: AppHandle, serial: String) -> Result<bool> {
+    let adb_path = resolve_adb_path(&app)?;
+    launcher::is_installed(&adb_path, &serial).await
 }
 
 #[tauri::command]
@@ -443,6 +469,9 @@ pub fn run() {
             set_kiosk,
             clear_kiosk,
             current_kiosk,
+            set_kiosk_many,
+            clear_kiosk_many,
+            launcher_is_installed,
             provision_wifi,
             get_settings,
             get_storage_info,
@@ -482,24 +511,37 @@ pub fn run() {
                     let _ = std::fs::set_permissions(&p, perms);
                 }
             }
-            // Best-effort: kick the adb server now so first-frame device list is fast.
+            // Best-effort: kick the adb server now so first-frame device list is fast,
+            // then run a forever-loop that silently retries wireless reconnect every
+            // 30 seconds. Once a headset is paired over USB, this loop is what keeps
+            // it talking to the Mac for the rest of the day with zero user action.
             let app_handle = app.handle().clone();
-            let state_handle = app.state::<AppState>();
-            let paired_ips: Vec<String> = state_handle
-                .settings
-                .snapshot()
-                .paired_wireless
-                .into_iter()
-                .map(|p| p.ip)
-                .collect();
+            let settings_handle = app.state::<AppState>().settings.clone();
             tauri::async_runtime::spawn(async move {
-                if let Ok(adb_path) = resolve_adb_path(&app_handle) {
-                    let _ = adb::ensure_server(&adb_path).await;
-                    // Try to silently reconnect to every wirelessly-paired headset.
-                    if !paired_ips.is_empty() {
-                        let ok = wireless::reconnect_all(&adb_path, &paired_ips).await;
-                        tracing::info!("auto-reconnected wireless headsets: {:?}", ok);
+                let adb_path = match resolve_adb_path(&app_handle) {
+                    Ok(p) => p,
+                    Err(e) => {
+                        tracing::warn!("adb not resolvable, wireless auto-reconnect disabled: {e}");
+                        return;
                     }
+                };
+                let _ = adb::ensure_server(&adb_path).await;
+                // Initial pass — short delay so the UI is up before we yell about devices.
+                tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+                loop {
+                    let paired_ips: Vec<String> = settings_handle
+                        .snapshot()
+                        .paired_wireless
+                        .into_iter()
+                        .map(|p| p.ip)
+                        .collect();
+                    if !paired_ips.is_empty() {
+                        // `reconnect_all` is idempotent — `adb connect` to an
+                        // already-connected target is a no-op, so we don't
+                        // thrash anything by re-running this every 30s.
+                        let _ok = wireless::reconnect_all(&adb_path, &paired_ips).await;
+                    }
+                    tokio::time::sleep(std::time::Duration::from_secs(30)).await;
                 }
             });
             Ok(())

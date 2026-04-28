@@ -12,17 +12,25 @@ import java.io.File
  *   "school_name": "Lincoln Middle School",
  *   "greeting": "Welcome, Wildcats",
  *   "include_system": false,
- *   "allowlist": ["com.beatgames.beatsaber", "com.AnotherAxiom.GorillaTag"]
+ *   "allowlist": ["com.beatgames.beatsaber", "com.AnotherAxiom.GorillaTag"],
+ *   "kiosk_app": "com.beatgames.beatsaber"   // optional — class-mode lock
  * }
  *
  * If `allowlist` is null/empty, all third-party apps show. If `include_system`
  * is true, system apps (Settings, Quest browser, etc.) also show.
+ *
+ * If `kiosk_app` is set, MainActivity ignores everything else and immediately
+ * (re-)launches that single package on every onResume. Combined with this
+ * launcher being the system home activity, that's the Class Mode lock: the
+ * student physically cannot navigate away from the chosen app until an admin
+ * clears the field from the desktop app.
  */
 data class LauncherConfig(
     val schoolName: String? = null,
     val greeting: String? = null,
     val includeSystem: Boolean = false,
-    val allowlist: List<String>? = null
+    val allowlist: List<String>? = null,
+    val kioskApp: String? = null
 )
 
 class ConfigStore(private val ctx: Context) {
@@ -42,7 +50,8 @@ class ConfigStore(private val ctx: Context) {
                 schoolName = obj.optString("school_name").ifBlank { null },
                 greeting = obj.optString("greeting").ifBlank { null },
                 includeSystem = obj.optBoolean("include_system", false),
-                allowlist = list
+                allowlist = list,
+                kioskApp = obj.optString("kiosk_app").ifBlank { null }
             )
         } catch (_: Throwable) {
             LauncherConfig()
@@ -57,6 +66,7 @@ class ConfigStore(private val ctx: Context) {
             put("greeting", cfg.greeting ?: "")
             put("include_system", cfg.includeSystem)
             put("allowlist", JSONArray(cfg.allowlist ?: emptyList<String>()))
+            cfg.kioskApp?.let { put("kiosk_app", it) }
         }
         file.writeText(obj.toString(2))
     }

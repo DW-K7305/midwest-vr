@@ -53,6 +53,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // Class Mode: if a kiosk_app is set in the config we are landing here
+        // because either (a) we just booted, or (b) the student pressed home
+        // and Quest dropped us as the system home activity. Either way, the
+        // contract is "send them right back to the locked app." We do this
+        // BEFORE refresh() so the user never sees the grid during a kiosk.
+        val cfg = configStore.load()
+        if (!cfg.kioskApp.isNullOrBlank()) {
+            val intent = packageManager.getLaunchIntentForPackage(cfg.kioskApp)
+            if (intent != null) {
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                try {
+                    startActivity(intent)
+                    return
+                } catch (_: Throwable) {
+                    // Fall through to grid if the kiosk app is uninstalled.
+                }
+            }
+        }
         refresh()
     }
 

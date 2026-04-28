@@ -12,6 +12,9 @@ export interface Device {
   storage_free: number | null;
   storage_total: number | null;
   is_quest: boolean;
+  /** "usb" | "wireless" — derived from the serial format on the backend. */
+  connection_type: string;
+  running_app: string | null;
 }
 
 export interface InstalledApp {
@@ -121,4 +124,11 @@ export interface StorageInfo {
 export interface AppError {
   kind: "AdbMissing" | "AdbFailed" | "DeviceOffline" | "Io" | "Parse" | "Config" | "Other";
   message: string;
+}
+
+/** Per-headset result from a bulk kiosk operation. */
+export interface KioskResult {
+  serial: string;
+  ok: boolean;
+  error: string | null;
 }

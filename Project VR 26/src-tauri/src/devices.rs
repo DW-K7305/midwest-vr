@@ -29,6 +29,11 @@ pub struct Device {
     pub storage_total: Option<u64>,
     /// Convenience flag: did we positively identify this as a Meta Quest?
     pub is_quest: bool,
+    /// "usb" | "wireless" — derived from the serial format. Wireless serials
+    /// look like "192.168.1.42:5555"; USB serials are alphanumeric only.
+    pub connection_type: String,
+    /// Currently-running foreground app package, if known.
+    pub running_app: Option<String>,
 }
 
 impl Device {
@@ -49,6 +54,11 @@ impl Device {
                 product = Some(v.to_string());
             }
         }
+        let connection_type = if serial.contains(':') {
+            "wireless".to_string()
+        } else {
+            "usb".to_string()
+        };
         Some(Self {
             serial,
             state,
@@ -62,6 +72,8 @@ impl Device {
             storage_free: None,
             storage_total: None,
             is_quest: false,
+            connection_type,
+            running_app: None,
         })
     }
 }
@@ -130,6 +142,34 @@ pub async fn enrich(adb_path: &Path, dev: &mut Device) -> Result<()> {
         }
     }
 
+    // Currently-running foreground app. Two parsers, fallback chain:
+    //   a) `dumpsys activity activities | grep mResumedActivity` — modern Android
+    //   b) `dumpsys window` — older fallback
+    if let Ok(o) = adb_shell(adb_path, &dev.serial, &["dumpsys", "activity", "activities"]).await {
+        for line in o.lines() {
+            let line = line.trim();
+            if line.starts_with("mResumedActivity") || line.starts_with("ResumedActivity") {
+                if let Some(pkg) = parse_pkg_from_activity_line(line) {
+                    dev.running_app = Some(pkg);
+                    break;
+                }
+            }
+        }
+    }
+    if dev.running_app.is_none() {
+        if let Ok(o) = adb_shell(adb_path, &dev.serial, &["dumpsys", "window"]).await {
+            for line in o.lines() {
+                let line = line.trim();
+                if line.starts_with("mCurrentFocus") || line.starts_with("mFocusedApp") {
+                    if let Some(pkg) = parse_pkg_from_activity_line(line) {
+                        dev.running_app = Some(pkg);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     // Storage on /sdcard
     if let Ok(o) = adb_shell(adb_path, &dev.serial, &["df", "-B1", "/sdcard"]).await {
         // Header + one line. Columns: Filesystem 1B-blocks Used Available Use% Mounted-on
@@ -161,6 +201,23 @@ fn parse_getprop_line(line: &str) -> Option<(String, String)> {
     Some((key.to_string(), line[v_open..v_end].to_string()))
 }
 
+/// Parse a package name out of an activity-component spec like
+/// `u0 com.example/.MainActivity t12345}`. Looks for the first
+/// `<pkg>/<activity>` pair on the line.
+fn parse_pkg_from_activity_line(line: &str) -> Option<String> {
+    for tok in line.split_whitespace() {
+        // Trim trailing punctuation that dumpsys often appends.
+        let tok = tok.trim_end_matches(|c: char| c == '}' || c == ',' || c == ')');
+        if let Some((pkg, _)) = tok.split_once('/') {
+            // Quick sanity: package names contain dots and no slashes.
+            if pkg.contains('.') && !pkg.is_empty() && !pkg.contains(':') {
+                return Some(pkg.to_string());
+            }
+        }
+    }
+    None
+}
+
 fn is_quest_model(model: Option<&str>, product: Option<&str>) -> bool {
     let hay = format!(
         "{} {}",
@@ -190,6 +247,18 @@ mod tests {
         let (k, v) = parse_getprop_line("[ro.product.model]: [Quest 2]").unwrap();
         assert_eq!(k, "ro.product.model");
         assert_eq!(v, "Quest 2");
+    }
+
+    #[test]
+    fn parses_running_pkg() {
+        assert_eq!(
+            parse_pkg_from_activity_line("mResumedActivity: ActivityRecord{abc u0 com.beatgames.beatsaber/.MainActivity t12}"),
+            Some("com.beatgames.beatsaber".to_string()),
+        );
+        assert_eq!(
+            parse_pkg_from_activity_line("  mCurrentFocus=Window{abc u0 com.midwestvr.launcher/.MainActivity}"),
+            Some("com.midwestvr.launcher".to_string()),
+        );
     }
 
     #[test]

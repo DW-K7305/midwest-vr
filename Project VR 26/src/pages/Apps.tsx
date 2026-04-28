@@ -12,6 +12,7 @@ import {
   Download,
   HelpCircle,
   Loader2,
+  Lock,
   Play,
   Search,
   Square,
@@ -305,6 +306,19 @@ export function Apps() {
                     }
                   }}
                   onAskRemove={() => openRemoveConfirmFor([a.package])}
+                  onLockClass={async () => {
+                    try {
+                      await api.setKiosk(serial, a.package);
+                      toast.success(
+                        `${a.displayName} locked on this headset. Open Class Mode to lock more.`
+                      );
+                    } catch (e: unknown) {
+                      toast.error(
+                        (e as { message?: string })?.message ??
+                          "Lock failed. Push the MidWest-VR Launcher first."
+                      );
+                    }
+                  }}
                 />
               ))}
             </div>
@@ -350,6 +364,7 @@ interface AppCardProps {
   onLaunch: () => Promise<void>;
   onForceStop: () => Promise<void>;
   onAskRemove: () => void;
+  onLockClass: () => Promise<void>;
 }
 
 function AppCard({
@@ -359,6 +374,7 @@ function AppCard({
   onLaunch,
   onForceStop,
   onAskRemove,
+  onLockClass,
 }: AppCardProps) {
   return (
     <Card
@@ -441,6 +457,15 @@ function AppCard({
           >
             <Play className="h-3 w-3 mr-1" />
             Launch
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2 text-xs"
+            onClick={onLockClass}
+            title="Lock this headset to this app (Class Mode)"
+          >
+            <Lock className="h-3 w-3" />
           </Button>
           <Button
             variant="ghost"

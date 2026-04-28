@@ -6,7 +6,7 @@ import { Connect } from "@/pages/Connect";
 import { Discover } from "@/pages/Discover";
 import { Stores } from "@/pages/Stores";
 import { Apps } from "@/pages/Apps";
-import { Kiosk } from "@/pages/Kiosk";
+import { ClassMode } from "@/pages/ClassMode";
 import { LauncherPage } from "@/pages/Launcher";
 import { Setup } from "@/pages/Setup";
 import { WifiPage } from "@/pages/WiFi";
@@ -30,7 +30,9 @@ export default function App() {
             <Route path="/stores" element={<Stores />} />
             <Route path="/apps" element={<Apps />} />
             <Route path="/launcher" element={<LauncherPage />} />
-            <Route path="/kiosk" element={<Kiosk />} />
+            <Route path="/class-mode" element={<ClassMode />} />
+            {/* Old /kiosk URLs (e.g. user bookmarks) redirect to the new page. */}
+            <Route path="/kiosk" element={<Navigate to="/class-mode" replace />} />
             <Route path="/wifi" element={<WifiPage />} />
             <Route path="/wireless" element={<Wireless />} />
             <Route path="/settings" element={<SettingsPage />} />

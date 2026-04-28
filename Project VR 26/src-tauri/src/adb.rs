@@ -111,3 +111,19 @@ pub async fn adb_push(
     let _ = adb(adb_path, &["-s", serial, "push", local_str, remote]).await?;
     Ok(())
 }
+
+/// `adb -s <serial> pull <remote> <local>` — copies a file off the headset.
+/// Returns the same `Result<()>` as `adb_push`; if the remote file is missing,
+/// adb returns non-zero and the caller decides whether that's fatal.
+pub async fn adb_pull(
+    adb_path: &Path,
+    serial: &str,
+    remote: &str,
+    local: &Path,
+) -> Result<()> {
+    let local_str = local
+        .to_str()
+        .ok_or_else(|| AppError::Config("local path is not valid UTF-8".into()))?;
+    let _ = adb(adb_path, &["-s", serial, "pull", remote, local_str]).await?;
+    Ok(())
+}

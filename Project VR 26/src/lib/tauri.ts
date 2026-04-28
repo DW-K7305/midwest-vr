@@ -10,6 +10,7 @@ import type {
   CatalogApp,
   Device,
   InstalledApp,
+  KioskResult,
   LauncherConfig,
   LauncherPushEvent,
   NetworkLogEntry,
@@ -35,12 +36,18 @@ export const api = {
   forceStop: (serial: string, pkg: string) =>
     invoke<void>("force_stop", { serial, package: pkg }),
 
-  // Kiosk
+  // Kiosk / Class Mode
   setKiosk: (serial: string, pkg: string) =>
     invoke<void>("set_kiosk", { serial, package: pkg }),
   clearKiosk: (serial: string) => invoke<void>("clear_kiosk", { serial }),
   currentKiosk: (serial: string) =>
     invoke<string | null>("current_kiosk", { serial }),
+  setKioskMany: (serials: string[], pkg: string) =>
+    invoke<KioskResult[]>("set_kiosk_many", { serials, package: pkg }),
+  clearKioskMany: (serials: string[]) =>
+    invoke<KioskResult[]>("clear_kiosk_many", { serials }),
+  launcherIsInstalled: (serial: string) =>
+    invoke<boolean>("launcher_is_installed", { serial }),
 
   // Wi-Fi
   provisionWifi: (serial: string, creds: WifiCreds) =>

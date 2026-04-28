@@ -1,6 +1,6 @@
 import { useDevices } from "@/hooks/useDevices";
 import { Button } from "@/components/ui/button";
-import { Check, Headphones, RefreshCw } from "lucide-react";
+import { Cable, Check, Headphones, RefreshCw, Wifi } from "lucide-react";
 import { cn, shortSerial } from "@/lib/utils";
 
 interface Props {
@@ -45,12 +45,26 @@ export function DevicePicker({ selected, onSelect }: Props) {
                   : "hover:bg-accent"
               )}
             >
-              <Headphones className="h-4 w-4 text-muted-foreground" />
+              <Headphones className="h-4 w-4 text-muted-foreground shrink-0" />
               <span className="flex-1 truncate">
                 {d.model ?? "Quest"}{" "}
                 <span className="text-muted-foreground font-mono">
                   {shortSerial(d.serial)}
                 </span>
+              </span>
+              <span
+                className="text-muted-foreground shrink-0"
+                title={
+                  d.connection_type === "wireless"
+                    ? "Connected wirelessly"
+                    : "Connected via USB"
+                }
+              >
+                {d.connection_type === "wireless" ? (
+                  <Wifi className="h-3.5 w-3.5" />
+                ) : (
+                  <Cable className="h-3.5 w-3.5" />
+                )}
               </span>
               {selected === d.serial && (
                 <Check className="h-4 w-4 text-primary" />
