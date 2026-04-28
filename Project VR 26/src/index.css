@@ -56,12 +56,17 @@
   body { @apply bg-background text-foreground; font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif; }
 }
 
-/* Tauri title bar drag region — required so the app feels native on macOS. */
-.titlebar-drag {
+/* Tauri 2 drag-region: any element with `data-tauri-drag-region` is grabbable.
+   Also kept as a CSS fallback for older Tauri versions / WebKit quirks. */
+[data-tauri-drag-region] {
   -webkit-app-region: drag;
   app-region: drag;
+  cursor: default;
 }
-.titlebar-no-drag {
+[data-tauri-drag-region] button,
+[data-tauri-drag-region] a,
+[data-tauri-drag-region] input,
+[data-tauri-drag-region] [data-tauri-drag-region="false"] {
   -webkit-app-region: no-drag;
   app-region: no-drag;
 }

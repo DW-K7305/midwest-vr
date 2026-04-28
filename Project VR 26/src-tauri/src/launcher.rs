@@ -2,7 +2,7 @@
 //! headsets in one shot. Optional set-as-home call (requires user confirmation
 //! on the headset).
 
-use crate::adb::{self, adb_push, adb_shell};
+use crate::adb::{adb_push, adb_shell};
 use crate::apps;
 use crate::error::{AppError, Result};
 use serde::{Deserialize, Serialize};
@@ -169,8 +169,3 @@ where
     Ok(())
 }
 
-// Quiet unused-import lint when adb is referenced via crate::adb::adb in lib.rs.
-#[allow(dead_code)]
-fn _keep_adb_in_scope() {
-    let _ = adb::adb_push;
-}
