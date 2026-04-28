@@ -1,7 +1,6 @@
 //! Orchestrates: download an APK from a catalog entry, verify SHA256, then
 //! sideload to one or more headsets in parallel.
 
-use crate::adb;
 use crate::apps;
 use crate::catalog::{CatalogApp, InstallSource};
 use crate::error::{AppError, Result};

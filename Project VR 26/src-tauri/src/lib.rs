@@ -29,7 +29,7 @@ use crate::settings::{AppSettings, PairedHeadset, SettingsStore, StorageInfo};
 use crate::wifi::WifiCreds;
 use std::path::PathBuf;
 use std::sync::Arc;
-use tauri::{AppHandle, Emitter, State};
+use tauri::{AppHandle, Emitter, Manager, State};
 
 /// Shared app-wide state.
 pub struct AppState {
