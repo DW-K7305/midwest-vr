@@ -97,3 +97,17 @@ pub async fn ensure_server(adb_path: &Path) -> Result<()> {
     let _ = adb(adb_path, &["start-server"]).await?;
     Ok(())
 }
+
+/// `adb -s <serial> push <local> <remote>` — sends a file from this Mac to the headset.
+pub async fn adb_push(
+    adb_path: &Path,
+    serial: &str,
+    local: &Path,
+    remote: &str,
+) -> Result<()> {
+    let local_str = local
+        .to_str()
+        .ok_or_else(|| AppError::Config("local path is not valid UTF-8".into()))?;
+    let _ = adb(adb_path, &["-s", serial, "push", local_str, remote]).await?;
+    Ok(())
+}

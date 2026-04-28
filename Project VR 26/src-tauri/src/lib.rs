@@ -10,9 +10,12 @@ mod devices;
 mod discover;
 mod error;
 mod kiosk;
+mod launcher;
 mod network;
 mod settings;
+mod setup;
 mod wifi;
+mod wireless;
 
 use crate::adb::{ensure_server, resolve_adb_path};
 use crate::apps::InstalledApp;
@@ -20,8 +23,9 @@ use crate::catalog::{Catalog, CatalogApp, CatalogStore};
 use crate::devices::Device;
 use crate::discover::BatchEvent;
 use crate::error::{AppError, Result};
+use crate::launcher::{LauncherConfig, PushEvent as LauncherPushEvent};
 use crate::network::LogEntry as NetLogEntry;
-use crate::settings::{AppSettings, SettingsStore, StorageInfo};
+use crate::settings::{AppSettings, PairedHeadset, SettingsStore, StorageInfo};
 use crate::wifi::WifiCreds;
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -257,6 +261,151 @@ fn network_allowed_hosts() -> Vec<String> {
     network::allowed_hosts()
 }
 
+// ----- Phase 28: Launcher push -----
+
+#[tauri::command]
+async fn launcher_push(
+    app: AppHandle,
+    serials: Vec<String>,
+    apk_path: String,
+    config: LauncherConfig,
+    set_as_home: bool,
+) -> Result<()> {
+    let adb_path = resolve_adb_path(&app)?;
+    let apk = std::path::PathBuf::from(&apk_path);
+    let app_handle = app.clone();
+    launcher::push_many(
+        &adb_path,
+        &serials,
+        &apk,
+        &config,
+        set_as_home,
+        move |evt: LauncherPushEvent| {
+            let _ = app_handle.emit("launcher_push_event", evt);
+        },
+    )
+    .await
+}
+
+// ----- Phase 29: Headset Setup Wizard -----
+
+#[tauri::command]
+async fn headset_rename(app: AppHandle, serial: String, name: String) -> Result<()> {
+    let adb_path = resolve_adb_path(&app)?;
+    setup::rename(&adb_path, &serial, &name).await
+}
+
+#[tauri::command]
+async fn headset_reboot(app: AppHandle, serial: String) -> Result<()> {
+    let adb_path = resolve_adb_path(&app)?;
+    setup::reboot(&adb_path, &serial).await
+}
+
+#[tauri::command]
+async fn headset_power_off(app: AppHandle, serial: String) -> Result<()> {
+    let adb_path = resolve_adb_path(&app)?;
+    setup::power_off(&adb_path, &serial).await
+}
+
+#[tauri::command]
+async fn headset_factory_reset(app: AppHandle, serial: String) -> Result<()> {
+    let adb_path = resolve_adb_path(&app)?;
+    setup::factory_reset(&adb_path, &serial).await
+}
+
+#[tauri::command]
+async fn headset_sync_time(app: AppHandle, serial: String) -> Result<()> {
+    let adb_path = resolve_adb_path(&app)?;
+    setup::sync_time(&adb_path, &serial).await
+}
+
+#[tauri::command]
+async fn headset_screenshot(app: AppHandle, serial: String) -> Result<String> {
+    let adb_path = resolve_adb_path(&app)?;
+    // Save next to the bundle when in portable mode, otherwise ~/Documents.
+    let dest_dir = dirs::document_dir()
+        .map(|p| p.join("MidWest-VR-Screenshots"))
+        .unwrap_or_else(|| std::env::temp_dir());
+    let path = setup::screenshot(&adb_path, &serial, &dest_dir).await?;
+    Ok(path.display().to_string())
+}
+
+// ----- Phase 30: Wireless ADB -----
+
+#[tauri::command]
+async fn wireless_pair(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    serial: String,
+) -> Result<PairedHeadset> {
+    let adb_path = resolve_adb_path(&app)?;
+    let ip = wireless::pair_via_usb(&adb_path, &serial).await?;
+    // Try to enrich with the device's model so the UI shows a friendly label.
+    let label = devices::list_basic(&adb_path)
+        .await
+        .ok()
+        .and_then(|v| v.into_iter().find(|d| d.serial == serial))
+        .and_then(|d| d.model)
+        .unwrap_or_else(|| "Quest".to_string());
+    let serial_tail: String = {
+        let chars: Vec<char> = serial.chars().collect();
+        let n = chars.len();
+        chars.into_iter().skip(n.saturating_sub(4)).collect()
+    };
+    let entry = PairedHeadset {
+        label: format!("{} ({})", label, serial_tail),
+        serial: serial.clone(),
+        ip: ip.clone(),
+    };
+    // Persist (replacing any existing entry for the same serial).
+    let mut s = state.settings.snapshot();
+    s.paired_wireless.retain(|p| p.serial != serial);
+    s.paired_wireless.push(entry.clone());
+    state.settings.update(s)?;
+    Ok(entry)
+}
+
+#[tauri::command]
+async fn wireless_connect(app: AppHandle, ip: String) -> Result<()> {
+    let adb_path = resolve_adb_path(&app)?;
+    wireless::connect(&adb_path, &ip).await
+}
+
+#[tauri::command]
+async fn wireless_disconnect(app: AppHandle, ip: String) -> Result<()> {
+    let adb_path = resolve_adb_path(&app)?;
+    wireless::disconnect(&adb_path, &ip).await
+}
+
+#[tauri::command]
+async fn wireless_forget(state: State<'_, AppState>, serial: String) -> Result<()> {
+    let mut s = state.settings.snapshot();
+    s.paired_wireless.retain(|p| p.serial != serial);
+    state.settings.update(s)?;
+    Ok(())
+}
+
+#[tauri::command]
+fn wireless_list(state: State<'_, AppState>) -> Vec<PairedHeadset> {
+    state.settings.snapshot().paired_wireless
+}
+
+#[tauri::command]
+async fn wireless_reconnect_all(
+    app: AppHandle,
+    state: State<'_, AppState>,
+) -> Result<Vec<String>> {
+    let adb_path = resolve_adb_path(&app)?;
+    let ips: Vec<String> = state
+        .settings
+        .snapshot()
+        .paired_wireless
+        .into_iter()
+        .map(|p| p.ip)
+        .collect();
+    Ok(wireless::reconnect_all(&adb_path, &ips).await)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tracing_subscriber::fmt()
@@ -307,6 +456,19 @@ pub fn run() {
             network_log,
             network_clear_log,
             network_allowed_hosts,
+            launcher_push,
+            headset_rename,
+            headset_reboot,
+            headset_power_off,
+            headset_factory_reset,
+            headset_sync_time,
+            headset_screenshot,
+            wireless_pair,
+            wireless_connect,
+            wireless_disconnect,
+            wireless_forget,
+            wireless_list,
+            wireless_reconnect_all,
         ])
         .setup(|app| {
             // Ensure the bundled adb is executable. macOS preserves bits when
@@ -322,9 +484,22 @@ pub fn run() {
             }
             // Best-effort: kick the adb server now so first-frame device list is fast.
             let app_handle = app.handle().clone();
+            let state_handle = app.state::<AppState>();
+            let paired_ips: Vec<String> = state_handle
+                .settings
+                .snapshot()
+                .paired_wireless
+                .into_iter()
+                .map(|p| p.ip)
+                .collect();
             tauri::async_runtime::spawn(async move {
                 if let Ok(adb_path) = resolve_adb_path(&app_handle) {
                     let _ = adb::ensure_server(&adb_path).await;
+                    // Try to silently reconnect to every wirelessly-paired headset.
+                    if !paired_ips.is_empty() {
+                        let ok = wireless::reconnect_all(&adb_path, &paired_ips).await;
+                        tracing::info!("auto-reconnected wireless headsets: {:?}", ok);
+                    }
                 }
             });
             Ok(())

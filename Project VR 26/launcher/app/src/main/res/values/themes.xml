@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.MidWestVRLauncher" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">#7C5CFF</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#0F0F14</item>
+        <item name="colorOnSurface">#F5F5FA</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowBackground">@color/launcher_bg</item>
+    </style>
+
+    <style name="Theme.MidWestVRLauncher.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+</resources>

@@ -10,7 +10,10 @@ import type {
   CatalogApp,
   Device,
   InstalledApp,
+  LauncherConfig,
+  LauncherPushEvent,
   NetworkLogEntry,
+  PairedHeadset,
   StorageInfo,
   WifiCreds,
 } from "@/types";
@@ -65,12 +68,59 @@ export const api = {
   networkLog: () => invoke<NetworkLogEntry[]>("network_log"),
   networkClearLog: () => invoke<void>("network_clear_log"),
   networkAllowedHosts: () => invoke<string[]>("network_allowed_hosts"),
+
+  // Launcher push (Phase 28)
+  launcherPush: (
+    serials: string[],
+    apkPath: string,
+    config: LauncherConfig,
+    setAsHome: boolean
+  ) =>
+    invoke<void>("launcher_push", {
+      serials,
+      apkPath,
+      config,
+      setAsHome,
+    }),
+
+  // Headset Setup Wizard (Phase 29)
+  headsetRename: (serial: string, name: string) =>
+    invoke<void>("headset_rename", { serial, name }),
+  headsetReboot: (serial: string) => invoke<void>("headset_reboot", { serial }),
+  headsetPowerOff: (serial: string) =>
+    invoke<void>("headset_power_off", { serial }),
+  headsetFactoryReset: (serial: string) =>
+    invoke<void>("headset_factory_reset", { serial }),
+  headsetSyncTime: (serial: string) =>
+    invoke<void>("headset_sync_time", { serial }),
+  headsetScreenshot: (serial: string) =>
+    invoke<string>("headset_screenshot", { serial }),
+
+  // Wireless ADB (Phase 30)
+  wirelessPair: (serial: string) =>
+    invoke<PairedHeadset>("wireless_pair", { serial }),
+  wirelessConnect: (ip: string) => invoke<void>("wireless_connect", { ip }),
+  wirelessDisconnect: (ip: string) =>
+    invoke<void>("wireless_disconnect", { ip }),
+  wirelessForget: (serial: string) =>
+    invoke<void>("wireless_forget", { serial }),
+  wirelessList: () => invoke<PairedHeadset[]>("wireless_list"),
+  wirelessReconnectAll: () =>
+    invoke<string[]>("wireless_reconnect_all"),
 };
 
 export function onDiscoverEvent(
   fn: (e: BatchEvent) => void
 ): Promise<UnlistenFn> {
   return listen<BatchEvent>("discover_event", (evt) => fn(evt.payload));
+}
+
+export function onLauncherPushEvent(
+  fn: (e: LauncherPushEvent) => void
+): Promise<UnlistenFn> {
+  return listen<LauncherPushEvent>("launcher_push_event", (evt) =>
+    fn(evt.payload)
+  );
 }
 
 export interface InstallProgressEvent {

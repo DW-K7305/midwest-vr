@@ -3,7 +3,11 @@ import {
   Activity,
   Boxes,
   Compass,
+  Home,
   Lock,
+  Radio,
+  Sparkles,
+  Store,
   Wifi,
   Settings as SettingsIcon,
   Plug,
@@ -14,10 +18,14 @@ import { useDevices } from "@/hooks/useDevices";
 const NAV = [
   { to: "/", label: "Dashboard", icon: Activity, exact: true },
   { to: "/connect", label: "Connect", icon: Plug },
+  { to: "/setup", label: "Setup", icon: Sparkles },
   { to: "/discover", label: "Discover", icon: Compass },
+  { to: "/stores", label: "Stores", icon: Store },
   { to: "/apps", label: "Apps", icon: Boxes },
+  { to: "/launcher", label: "Launcher", icon: Home },
   { to: "/kiosk", label: "Kiosk", icon: Lock },
   { to: "/wifi", label: "Wi-Fi", icon: Wifi },
+  { to: "/wireless", label: "Wireless", icon: Radio },
   { to: "/settings", label: "Settings", icon: SettingsIcon },
 ];
 

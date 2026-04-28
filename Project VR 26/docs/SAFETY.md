@@ -87,6 +87,19 @@ configurable from the frontend or settings file. Every outbound
 request — allowed or rejected — is recorded in an in-memory ring buffer
 that the user (and IT) can audit live in Settings → Network activity log.
 
+In addition, the **webview itself** is locked down via Content Security
+Policy (CSP). Image loads (catalog thumbnails, screenshots) are limited
+to a small set of public-image hosts:
+
+- `raw.githubusercontent.com` (open-source repo banners)
+- `github.com` and `objects.githubusercontent.com`
+- `upload.wikimedia.org` (Wikipedia / Wikimedia Commons)
+- `cdn.sidequestvr.com`, `files.sidequestvr.com`
+
+Any other image source is silently dropped by the browser engine,
+not just by Rust. `script-src` is `'self' 'unsafe-inline'` only —
+no third-party JavaScript is permitted. There is no remote eval.
+
 **Things the app still does NOT do, even with the catalog enabled:**
 
 - No telemetry, analytics, error reporting, or session tracking.

@@ -33,7 +33,7 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self' tauri: ipc: http://ipc.localhost; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' tauri: ipc: data: blob: https://raw.githubusercontent.com https://github.com https://objects.githubusercontent.com https://upload.wikimedia.org https://cdn.sidequestvr.com https://files.sidequestvr.com; connect-src 'self' tauri: ipc: http://ipc.localhost https://raw.githubusercontent.com https://github.com https://objects.githubusercontent.com https://cdn.sidequestvr.com https://files.sidequestvr.com https://dl.google.com"
     }
   },
   "bundle": {

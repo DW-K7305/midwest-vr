@@ -91,6 +91,27 @@ export type BatchEvent =
   | { type: "headset_done"; app_id: string; serial: string }
   | { type: "headset_fail"; app_id: string; serial: string; error: string };
 
+export interface LauncherConfig {
+  school_name: string;
+  greeting: string;
+  include_system: boolean;
+  allowlist: string[];
+}
+
+export type LauncherPushEvent =
+  | { type: "headset_start"; serial: string }
+  | { type: "headset_install"; serial: string }
+  | { type: "headset_config"; serial: string }
+  | { type: "headset_set_home"; serial: string }
+  | { type: "headset_done"; serial: string }
+  | { type: "headset_fail"; serial: string; error: string };
+
+export interface PairedHeadset {
+  label: string;
+  serial: string;
+  ip: string;
+}
+
 export interface StorageInfo {
   portable: boolean;
   config_path: string;

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MidWest-VR</string>
+    <string name="empty_state">No apps approved yet. Ask your teacher / IT admin to push the configuration.</string>
+</resources>

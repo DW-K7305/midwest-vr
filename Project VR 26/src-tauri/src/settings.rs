@@ -29,6 +29,16 @@ pub struct AppSettings {
     /// Catalog index URL. Must point at an allowlisted host.
     #[serde(default = "default_catalog_url")]
     pub catalog_url: String,
+    /// Headsets we've paired wirelessly. Auto-reconnected on launch.
+    #[serde(default)]
+    pub paired_wireless: Vec<PairedHeadset>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PairedHeadset {
+    pub label: String,    // friendly name (the headset model + serial tail when we paired)
+    pub serial: String,   // original USB serial — used to remember which headset this was
+    pub ip: String,       // wlan0 IP at pair-time; we'll try this first
 }
 
 fn default_catalog_url() -> String {
@@ -52,6 +62,7 @@ impl Default for AppSettings {
             config_dir_override: None,
             online_catalog_enabled: false,
             catalog_url: default_catalog_url(),
+            paired_wireless: Vec::new(),
         }
     }
 }
