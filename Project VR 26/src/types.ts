@@ -12,8 +12,8 @@ export interface Device {
   storage_free: number | null;
   storage_total: number | null;
   is_quest: boolean;
-  /** "usb" | "wireless" — derived from the serial format on the backend. */
-  connection_type: string;
+  /** Derived from the serial format on the backend. */
+  connection_type: "usb" | "wireless";
   running_app: string | null;
 }
 

@@ -178,7 +178,7 @@ export function ClassMode() {
       } else {
         toast.warning(
           `Locked ${ok} of ${results.length}. ${fail.length} failed: ${fail
-            .map((f) => `${f.serial.slice(-4)}: ${f.error}`)
+            .map((f) => `${f.serial.slice(-4)}: ${f.error ?? "unknown error"}`)
             .join("; ")}`
         );
       }

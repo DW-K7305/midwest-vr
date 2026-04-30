@@ -69,8 +69,10 @@ export function DeviceCard({ device, onClick, selected }: Props) {
   const isWireless = d.connection_type === "wireless";
   const battery = d.battery_pct;
   const charging = d.battery_charging ?? false;
+  // Explicit null-checks because `storage_free === 0` is a real (full-disk)
+  // value, and a truthy `&&` would silently render the dial as "unknown".
   const storagePctUsed =
-    d.storage_total && d.storage_free
+    d.storage_total != null && d.storage_free != null && d.storage_total > 0
       ? Math.round(((d.storage_total - d.storage_free) / d.storage_total) * 100)
       : null;
   const lockedTo = kiosk.data ?? null;

@@ -61,7 +61,10 @@ export function Sidebar() {
               </li>
             );
           }
-          const { to, label, icon: Icon, exact } = item;
+          // The nav-item shapes don't all carry `exact`, so use a runtime
+          // probe instead of destructuring it out of the union.
+          const exact = "exact" in item ? item.exact : false;
+          const { to, label, icon: Icon } = item;
           return (
             <li key={to}>
               <NavLink
