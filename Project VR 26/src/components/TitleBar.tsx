@@ -29,7 +29,7 @@ import { useDevices } from "@/hooks/useDevices";
  * which iteration of MidWest-VR they're running. Bump this every round
  * that ships changes. Format: "1.<phase number>".
  */
-export const BUILD_TAG = "1.46";
+export const BUILD_TAG = "1.47";
 
 export function TitleBar() {
   const { data: devices } = useDevices();
