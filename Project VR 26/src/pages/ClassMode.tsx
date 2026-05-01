@@ -20,6 +20,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -217,22 +218,43 @@ export function ClassMode() {
       toast.success("Launcher already installed everywhere.");
       return;
     }
+    const config = {
+      school_name: "",
+      greeting: "",
+      include_system: false,
+      allowlist: [],
+    };
     setBusy("locking"); // reuse spinner
     try {
-      // Phase 43: use the launcher APK that's bundled inside this .app at
-      // build time. No file picker, no manual APK path. If the .app was
-      // built without a bundled APK (CI placeholder case), the backend
-      // returns a clear error explaining how to fix it.
-      await api.launcherPushBundled(
-        headsetsNeedingLauncher,
-        {
-          school_name: "",
-          greeting: "",
-          include_system: false,
-          allowlist: [],
-        },
-        true // set as home
-      );
+      // Phase 43 + Phase 48: prefer the launcher APK bundled inside this .app
+      // at build time so the user never sees a file picker. If the build
+      // didn't include a bundled APK (current CI state), gracefully fall
+      // back to a one-time file picker so Class Mode still works end-to-end.
+      let bundled = false;
+      try {
+        bundled = await api.launcherBundledAvailable();
+      } catch {
+        bundled = false;
+      }
+      if (bundled) {
+        await api.launcherPushBundled(headsetsNeedingLauncher, config, true);
+      } else {
+        const apkPath = await openDialog({
+          multiple: false,
+          filters: [{ name: "Android Package", extensions: ["apk"] }],
+          title: "Select MidWest-VR Launcher APK (one-time)",
+        });
+        if (!apkPath || Array.isArray(apkPath)) {
+          setBusy(null);
+          return;
+        }
+        await api.launcherPush(
+          headsetsNeedingLauncher,
+          apkPath as string,
+          config,
+          true
+        );
+      }
       toast.success(
         `Launcher installed on ${headsetsNeedingLauncher.length} headset${
           headsetsNeedingLauncher.length === 1 ? "" : "s"
