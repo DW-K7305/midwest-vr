@@ -1,0 +1,1485 @@
+{
+  "schema_version": 1,
+  "last_updated": "2026-04-27",
+  "_about": "MidWest-VR curated K-12 catalog. Pull requests welcome. Each entry is hand-vetted. Subjects: Science, Math, History, Language Arts, Social Studies, Geography, Art, Music, PE, Health, Free Play, Creative, Onboarding. Grade bands: K-2, 3-5, 6-8, 9-12.",
+  "apps": [
+    {
+      "id": "open-brush",
+      "name": "Open Brush",
+      "publisher": "Icosa Foundation (community Tilt Brush fork)",
+      "short_desc": "Paint in 3D space. Open-source, free, infinite creativity.",
+      "long_desc": "The community-maintained open-source successor to Google's Tilt Brush. Students paint full 3D environments around themselves with a huge brush library — flames, stars, ribbons, neon. Outstanding for art class, geometry visualization, set design, and free-time creativity. Apache 2.0 licensed.",
+      "subjects": [
+        "Art",
+        "Creative",
+        "Geometry",
+        "Free Play"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Open-source (Apache 2.0)",
+      "source": "sideload",
+      "source_url": "https://github.com/icosa-foundation/open-brush/releases/latest",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.Icosa.OpenBrush",
+      "thumbnail_url": "https://raw.githubusercontent.com/icosa-foundation/open-brush/main/Support/Images/OpenBrushBanner.png",
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "multibrush",
+      "name": "Multibrush",
+      "publisher": "Icosa Foundation",
+      "short_desc": "Open Brush + multiplayer. Paint together in the same space.",
+      "long_desc": "Open-source multiplayer painting. Up to 12 students can collaborate on a single 3D canvas at the same time — perfect for collaborative art projects, group brainstorming, or student showcases.",
+      "subjects": [
+        "Art",
+        "Creative",
+        "Social",
+        "Collaboration"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Open-source",
+      "source": "sideload",
+      "source_url": "https://github.com/icosa-foundation/multibrush/releases/latest",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.Icosa.Multibrush",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "mission-iss",
+      "name": "Mission: ISS",
+      "publisher": "Magnopus / NASA",
+      "short_desc": "Tour the actual International Space Station in microgravity.",
+      "long_desc": "NASA-backed free experience. Students float through the actual ISS, dock the SpaceX Dragon capsule, and learn about life in space from real astronaut narration. Perfect for space science units. One of the highest-quality free educational apps on Quest.",
+      "subjects": [
+        "Science",
+        "Space",
+        "Physics"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/mission-iss/1631939930205112/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.magnopus.MissionISS",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "anne-frank-house-vr",
+      "name": "Anne Frank House VR",
+      "publisher": "Force Field VR / Anne Frank Stichting",
+      "short_desc": "Walk through the Secret Annex in 1944 Amsterdam.",
+      "long_desc": "Award-winning historical VR experience produced in partnership with the Anne Frank Foundation. Students experience the hiding place of Anne Frank's family with thoughtful, age-appropriate narration. Pairs powerfully with Holocaust education units.",
+      "subjects": [
+        "History",
+        "Social Studies",
+        "Language Arts"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E10+",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/anne-frank-house-vr/1396490987070668/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.forcefieldentertainment.annefrankhouse",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "the-body-vr",
+      "name": "The Body VR: Journey Inside a Cell",
+      "publisher": "The Body VR LLC",
+      "short_desc": "Travel through the bloodstream and inside a human cell.",
+      "long_desc": "Free anatomy experience that takes students through veins and inside cells to see organelles in action. Excellent middle/high school biology supplement.",
+      "subjects": [
+        "Science",
+        "Biology",
+        "Anatomy"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/the-body-vr-journey-inside-a-cell/1430982943600901/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.thebodyvr.thebodyvr",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "first-hand",
+      "name": "First Hand",
+      "publisher": "Meta",
+      "short_desc": "Hand-tracking demo. Magical first-VR experience for students.",
+      "long_desc": "Meta's free hand-tracking demo. No controllers needed — students use just their hands. The cleanest 'first 5 minutes in VR' experience available, especially for elementary students.",
+      "subjects": [
+        "Onboarding",
+        "Free Play"
+      ],
+      "grade_bands": [
+        "K-2",
+        "3-5",
+        "6-8"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/first-hand/4264971436900837/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.oculus.handsdemo",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "first-steps",
+      "name": "First Steps",
+      "publisher": "Meta",
+      "short_desc": "Meta's official VR onboarding tutorial. Free.",
+      "long_desc": "The pre-installed first-time-VR tutorial. Teaches controller use, room-scale movement, and confidence in VR. Often the right first stop for any new student before anything else.",
+      "subjects": [
+        "Onboarding",
+        "Free Play"
+      ],
+      "grade_bands": [
+        "K-2",
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free (preinstalled)",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/first-steps/1863547050392688/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.oculus.firstcontact",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "wander",
+      "name": "Wander",
+      "publisher": "Parkline Interactive",
+      "short_desc": "Google-Street-View-style world travel in VR.",
+      "long_desc": "Stand anywhere on Earth and look around in 3D. Wander uses Google Street View imagery so students can visit landmarks, walk a foreign capital, or explore biomes. Free tier covers most curriculum needs.",
+      "subjects": [
+        "Geography",
+        "Social Studies",
+        "History"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free with optional paid",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/wander/2078343595573661/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.parkline.wander",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "google-earth-vr",
+      "name": "Google Earth VR (Web)",
+      "publisher": "Google",
+      "short_desc": "Fly the planet in VR. Native Quest version unavailable; available via PC streaming.",
+      "long_desc": "Originally released for SteamVR. Not native on Quest 2 standalone, but accessible via PC streaming (Air Link, Virtual Desktop). Listed for visibility — pair with a teacher PC for the best classroom experience.",
+      "subjects": [
+        "Geography",
+        "Social Studies"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free (PC required)",
+      "source": "store",
+      "source_url": "https://arvr.google.com/earth/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": null,
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "gorilla-tag",
+      "name": "Gorilla Tag",
+      "publisher": "Another Axiom",
+      "short_desc": "Free, social, physical tag. Massive K-12 hit.",
+      "long_desc": "Climb, run, and tag like a gorilla using only your arms. Free, hugely popular with elementary and middle-school students, and a legitimate workout. Many districts approve it for break time / gym class.",
+      "subjects": [
+        "PE",
+        "Free Play",
+        "Movement",
+        "Social"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E10+",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/gorilla-tag/4979055762136823/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.AnotherAxiom.GorillaTag",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "gym-class-basketball",
+      "name": "Gym Class - Basketball",
+      "publisher": "IRL Studios",
+      "short_desc": "5v5 pickup basketball in VR. Gets kids moving.",
+      "long_desc": "Free social VR basketball. Kids physically jump, dribble, and shoot. Great for PE, gym class, or after-school programs.",
+      "subjects": [
+        "PE",
+        "Sports",
+        "Social"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/gym-class-basketball/4946966085375156/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.IRLStudios.GymClass",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "youtube-vr",
+      "name": "YouTube VR",
+      "publisher": "Google",
+      "short_desc": "Watch any 360°/VR video — and any YouTube video on a virtual screen.",
+      "long_desc": "Massive content library with thousands of free educational 360° videos: NASA, National Geographic, history reenactments, virtual field trips. Probably the highest content-per-minute educational tool on Quest.",
+      "subjects": [
+        "Science",
+        "History",
+        "Geography",
+        "Art",
+        "Multi-subject"
+      ],
+      "grade_bands": [
+        "K-2",
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/youtube-vr/2002317119880945/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.google.android.apps.youtube.vr.oculus",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "rec-room",
+      "name": "Rec Room",
+      "publisher": "Rec Room Inc.",
+      "short_desc": "Free social VR with parental controls. Mini-games, creativity, hangouts.",
+      "long_desc": "Massive free social VR platform. Students can create rooms, play paintball, do escape rooms, and build content. Robust junior-account controls — schools can lock to friends-only or family rooms.",
+      "subjects": [
+        "Social",
+        "Creative",
+        "Free Play"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "T",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/rec-room/1856672347794301/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.AgainstGravity.RecRoom",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "vrchat",
+      "name": "VRChat",
+      "publisher": "VRChat Inc.",
+      "short_desc": "Free social platform. Set parental controls before classroom use.",
+      "long_desc": "Massive free social VR platform with user-created worlds. Has educational worlds (museum tours, anatomy labs, math visualizations), but also general public spaces — schools should configure parental/safe-mode settings before use. Recommended only for supervised 9-12.",
+      "subjects": [
+        "Social",
+        "Creative"
+      ],
+      "grade_bands": [
+        "9-12"
+      ],
+      "age_rating": "T",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/vrchat/1856672347794301/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.vrchat.VRChat",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "spatial",
+      "name": "Spatial",
+      "publisher": "Spatial Systems Inc.",
+      "short_desc": "Free educational metaverse. Class field trips, gallery shows, group meetings.",
+      "long_desc": "Free metaverse platform widely used in education. Teachers can host classes in custom rooms, mount images and videos as a virtual gallery, and run guided experiences. Excellent for distance learning, art shows, and collaborative project presentations.",
+      "subjects": [
+        "Social",
+        "Creative",
+        "Collaboration",
+        "Multi-subject"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E10+",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.spatial.io/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "io.spatial.spatial",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "engage",
+      "name": "ENGAGE",
+      "publisher": "ENGAGE XR",
+      "short_desc": "VR education platform free for educators.",
+      "long_desc": "Purpose-built educational metaverse used by universities, K-12 districts, and corporate trainers. Free educator account unlocks lesson templates, virtual classrooms, science simulations, and historical reenactments. Closer to a curriculum delivery system than a single app.",
+      "subjects": [
+        "Multi-subject",
+        "Collaboration"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free for educators",
+      "source": "store",
+      "source_url": "https://engagevr.io/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.engagevr.client",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "frame-vr",
+      "name": "Frame",
+      "publisher": "Virbela / Frame",
+      "short_desc": "Free 3D collaboration spaces — runs in VR or on a regular browser.",
+      "long_desc": "WebXR-based shared spaces. Teachers can build classroom worlds, mount whiteboards and 3D models, then have students join in VR (Quest) or via browser. The free tier is enough for most K-12 classes.",
+      "subjects": [
+        "Collaboration",
+        "Multi-subject"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free tier",
+      "source": "store",
+      "source_url": "https://framevr.io/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": null,
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "apollo-11-vr",
+      "name": "Apollo 11 VR",
+      "publisher": "Immersive VR Education",
+      "short_desc": "Re-live the Apollo 11 mission from launch to lunar landing.",
+      "long_desc": "Documentary-style VR covering the entire Apollo 11 mission. Students experience Saturn V launch, lunar approach, and Neil Armstrong's first steps. Excellent for space science and 20th-century US history.",
+      "subjects": [
+        "Science",
+        "Space",
+        "History"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Paid (one-time)",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/apollo-11-vr/2256322757752234/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.immersivevreducation.apollo11vr",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "titanic-vr",
+      "name": "Titanic VR",
+      "publisher": "Immersive VR Education",
+      "short_desc": "Documentary submersible dive on the wreck of the Titanic.",
+      "long_desc": "From the same studio behind Apollo 11 VR. Students dive on the wreck and learn about the ship's history. Strong tie-in to history, engineering, and oceanography units.",
+      "subjects": [
+        "History",
+        "Science",
+        "Oceanography"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E10+",
+      "license": "Paid",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/titanic-vr/1937141483061898/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.immersivevreducation.titanicvr",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "beat-saber-demo",
+      "name": "Beat Saber (Demo)",
+      "publisher": "Beat Games",
+      "short_desc": "Free demo of the rhythm classic. PE / movement programs.",
+      "long_desc": "The free demo of the rhythm classic. Slice incoming blocks to the beat with light sabers — extremely physical, hugely engaging, widely used in adaptive PE programs.",
+      "subjects": [
+        "PE",
+        "Music",
+        "Movement"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E10+",
+      "license": "Free demo (full game paid)",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/beat-saber/2448060205267927/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.beatgames.beatsaber",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "supernatural-trial",
+      "name": "Supernatural (Free Trial)",
+      "publisher": "Within Unlimited / Meta",
+      "short_desc": "Cardio + boxing fitness in scenic locations. 30-day free trial.",
+      "long_desc": "High-end coached fitness. Boxing routines and 'flow' workouts in stunning natural locations. Excellent for high-school PE / wellness programs. Free trial covers a typical curriculum unit.",
+      "subjects": [
+        "PE",
+        "Health",
+        "Fitness"
+      ],
+      "grade_bands": [
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free trial, then paid",
+      "source": "store",
+      "source_url": "https://www.getsupernatural.com/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.within.supernatural",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "synth-riders-demo",
+      "name": "Synth Riders (Demo)",
+      "publisher": "Kluge Interactive",
+      "short_desc": "Dance-rhythm game with free demo. Physical, joyful.",
+      "long_desc": "Rhythm-flow dance game — the dance complement to Beat Saber's slicing. Has accessibility settings (seated mode, visual cues) that work well in adaptive PE.",
+      "subjects": [
+        "PE",
+        "Music",
+        "Movement",
+        "Accessibility"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E10+",
+      "license": "Free demo",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/synth-riders/2436558143118760/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.kluge.synthriders",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "pistol-whip-demo",
+      "name": "Pistol Whip (Demo)",
+      "publisher": "Cloudhead Games",
+      "short_desc": "Rhythm-action with free demo. Cardio + dodging.",
+      "long_desc": "Rhythm action — duck, dodge, and (in school-friendly 'No Fail' mode) move to the beat. The free demo gives plenty of fitness content; full version is paid.",
+      "subjects": [
+        "PE",
+        "Music",
+        "Movement"
+      ],
+      "grade_bands": [
+        "9-12"
+      ],
+      "age_rating": "T",
+      "license": "Free demo",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/pistol-whip/2104963472924093/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.cloudhead.pistolwhip",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "eleven-table-tennis-demo",
+      "name": "Eleven Table Tennis (Demo)",
+      "publisher": "For Fun Labs",
+      "short_desc": "World-class table tennis simulator. Free demo.",
+      "long_desc": "The most physically accurate table tennis sim on Quest. Used by actual table tennis pros for off-table practice. Excellent fine-motor and reflex training; gentle physical activity.",
+      "subjects": [
+        "PE",
+        "Sports"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free demo",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/eleven-table-tennis/1995434190525828/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.forfunlabs.eleven",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "walkabout-mini-golf-trial",
+      "name": "Walkabout Mini Golf (Trial)",
+      "publisher": "Mighty Coconut",
+      "short_desc": "Family-friendly mini-golf with free trial. Surprisingly educational.",
+      "long_desc": "Calm, gorgeous mini-golf — popular with all ages. Has hidden trivia courses (history, science) and is great for SEL / break-time / grandparent days. Free trial is a single course; full version is paid.",
+      "subjects": [
+        "Free Play",
+        "Social",
+        "PE"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free trial",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/walkabout-mini-golf/2462678267173943/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.mightycoconut.walkabout",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "epic-roller-coasters",
+      "name": "Epic Roller Coasters",
+      "publisher": "B4T Games",
+      "short_desc": "Free rollercoaster sim. Basic physics + great VR onboarding.",
+      "long_desc": "Free rollercoaster experience — a classic 'first VR moment' app. Useful for physics conversations (g-forces, acceleration), and a gentle VR introduction for students who don't tolerate other movement well.",
+      "subjects": [
+        "Physics",
+        "Onboarding",
+        "Free Play"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E10+",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/epic-roller-coasters/2299000536864208/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.B4TGames.EpicRollerCoasters",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "real-vr-fishing-demo",
+      "name": "Real VR Fishing (Demo)",
+      "publisher": "MIRAGESOFT",
+      "short_desc": "Calm, beautiful fishing sim with free demo. SEL-friendly.",
+      "long_desc": "Real-world locations rendered beautifully. Genuinely calm, low-stimulation experience used in SEL, anxiety/sensory regulation, and life-skills programs. A surprise hit for special education programs.",
+      "subjects": [
+        "SEL",
+        "Free Play",
+        "Special Ed"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free demo",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/real-vr-fishing/2417209661642089/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.miragesoft.realvrfishing",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "bait",
+      "name": "Bait!",
+      "publisher": "Resolution Games",
+      "short_desc": "Cartoon fishing game. Free, calm, kid-friendly.",
+      "long_desc": "Lighthearted free fishing game with cartoon style. Younger students love it; doesn't trigger motion sensitivity; pleasant break-time pick.",
+      "subjects": [
+        "Free Play",
+        "SEL"
+      ],
+      "grade_bands": [
+        "K-2",
+        "3-5"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/bait/919212608109544/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.ResolutionGames.Bait",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "halfandhalf",
+      "name": "Half + Half",
+      "publisher": "Normal VR",
+      "short_desc": "Free social party games. Social-emotional gold.",
+      "long_desc": "Free social VR with charming cartoon avatars. Mini-games (tag, hide-and-seek, flying, music). Cross-platform with Mac/PC. Excellent for SEL, peer bonding, supervised free time.",
+      "subjects": [
+        "Social",
+        "SEL",
+        "Free Play"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/half-half/2299006273492299/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.normalvr.halfandhalf",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "titans-of-space",
+      "name": "Titans of Space PLUS",
+      "publisher": "DrashVR LLC",
+      "short_desc": "Tour our solar system to true scale. Astronomy fundamentals.",
+      "long_desc": "A guided tour of the planets at near-true scale. Students sit in a spacecraft cockpit and watch as the size and distance of celestial bodies are visualized in a way 2D textbooks simply can't match.",
+      "subjects": [
+        "Science",
+        "Space",
+        "Astronomy"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/titans-of-space-plus/2272010249589658/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.drashvr.titansofspaceplus",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": true
+    },
+    {
+      "id": "national-geographic-explore-vr",
+      "name": "National Geographic Explore VR",
+      "publisher": "National Geographic",
+      "short_desc": "Photographer's expeditions to Antarctica and Machu Picchu.",
+      "long_desc": "Take a National Geographic photographer's role on guided expeditions. Antarctic ice climbing and a Machu Picchu archaeological dig. Beautiful for geography, ecology, and exploration units.",
+      "subjects": [
+        "Geography",
+        "Science",
+        "Social Studies"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Paid (one-time)",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/national-geographic-explore-vr/2046607608728563/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.forcefieldentertainment.NatGeo",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "ocean-rift",
+      "name": "Ocean Rift",
+      "publisher": "Llyr ap Cenydd",
+      "short_desc": "Swim with whales, dolphins, and sharks. Marine biology.",
+      "long_desc": "Free 360° underwater experience. Encounter dolphins, whales, sharks, and prehistoric marine life in different ocean biomes. Beautiful supplement to marine biology and ocean ecosystem units.",
+      "subjects": [
+        "Science",
+        "Biology",
+        "Oceanography"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Paid (one-time, low cost)",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/ocean-rift/2120096351357324/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.llyrapcenydd.OceanRift",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "nature-treks-vr",
+      "name": "Nature Treks VR",
+      "publisher": "Greener Games",
+      "short_desc": "Calming nature environments. SEL, anxiety, sensory regulation.",
+      "long_desc": "Walk through deeply calming forest, beach, mountain, and savanna environments. No goals, no UI noise — pure nature. Widely used in SEL programs, special education, and sensory rooms.",
+      "subjects": [
+        "SEL",
+        "Special Ed",
+        "Science",
+        "Free Play"
+      ],
+      "grade_bands": [
+        "K-2",
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Paid",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/nature-treks-vr/2426206950790306/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.GreenerGames.NatureTreksVR",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "tilt-brush-archive",
+      "name": "Tilt Brush (Archive)",
+      "publisher": "Google (no longer sold)",
+      "short_desc": "The original 3D paint app. Use Open Brush instead — same project, maintained.",
+      "long_desc": "Tilt Brush was the OG VR painting app. Google open-sourced it and stopped selling it. Use Open Brush, which is the maintained community fork.",
+      "subjects": [
+        "Art",
+        "Creative"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free (deprecated)",
+      "source": "store",
+      "source_url": "https://github.com/icosa-foundation/open-brush",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": null,
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "incell-vr",
+      "name": "InCell VR",
+      "publisher": "Nival",
+      "short_desc": "Race through a human cell while learning organelles.",
+      "long_desc": "Free educational rail-shooter set inside a human cell. Players defend the cell from a virus while learning organelle names and functions. Combines fun with biology vocabulary.",
+      "subjects": [
+        "Science",
+        "Biology",
+        "Anatomy"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/incell-vr/1463793823715072/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.nival.incellvr",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "sharecare-you",
+      "name": "Sharecare YOU VR",
+      "publisher": "Sharecare",
+      "short_desc": "Anatomy walkthrough — explore organs and systems in detail.",
+      "long_desc": "Detailed interactive human-body atlas. Cardiovascular, respiratory, nervous, digestive systems — all explorable. Pricey but used in many high-school anatomy and pre-med programs.",
+      "subjects": [
+        "Science",
+        "Biology",
+        "Anatomy",
+        "Health"
+      ],
+      "grade_bands": [
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Paid",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/sharecare-you/2326729694165533/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.sharecare.you",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "3d-organon-anatomy",
+      "name": "3D Organon Anatomy",
+      "publisher": "Medis Media",
+      "short_desc": "Medical-grade anatomy reference. Pre-med and AP Bio.",
+      "long_desc": "Professional-grade 3D anatomy atlas used by med schools. Detailed dissection views of every system. Free educator licenses available for accredited programs.",
+      "subjects": [
+        "Science",
+        "Biology",
+        "Anatomy",
+        "Health"
+      ],
+      "grade_bands": [
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Paid (free for educators)",
+      "source": "store",
+      "source_url": "https://www.3dorganon.com/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": null,
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "lifeliqe",
+      "name": "Lifeliqe VR Museum",
+      "publisher": "Lifeliqe",
+      "short_desc": "VR field trips through 1000+ scientifically accurate models.",
+      "long_desc": "K-12 science platform with extensive 3D model library — animals, plants, anatomy, chemistry, geology. Pricier but built for school adoption with curriculum-aligned content.",
+      "subjects": [
+        "Science",
+        "Biology",
+        "Multi-subject"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Subscription",
+      "source": "store",
+      "source_url": "https://www.lifeliqe.com/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": null,
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "prisms-math",
+      "name": "Prisms VR",
+      "publisher": "Prisms of Reality",
+      "short_desc": "Math through movement. Algebra, geometry, calculus in VR.",
+      "long_desc": "Highly regarded K-12 math platform. Students learn rate-of-change, geometry, algebra by physically interacting with mathematical visualizations. Used in 100+ districts.",
+      "subjects": [
+        "Math",
+        "Algebra",
+        "Geometry"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Subscription",
+      "source": "store",
+      "source_url": "https://www.prismsvr.com/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": null,
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "victoryxr",
+      "name": "VictoryXR",
+      "publisher": "VictoryXR",
+      "short_desc": "K-12 + higher-ed VR curriculum platform.",
+      "long_desc": "Full K-12 and university VR curriculum suite. Frog dissection, ancient civilization tours, chemistry labs, astronomy, US history. School adoption pricing.",
+      "subjects": [
+        "Multi-subject",
+        "Science",
+        "History"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Subscription",
+      "source": "store",
+      "source_url": "https://www.victoryxr.com/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": null,
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "floreo",
+      "name": "Floreo",
+      "publisher": "Floreo",
+      "short_desc": "VR therapy lessons for autism and behavioral support.",
+      "long_desc": "Clinically researched VR lessons for students with autism. Social skills, language pragmatics, coping strategies. Used by school SLPs, BCBAs, and special education teams.",
+      "subjects": [
+        "Special Ed",
+        "SEL",
+        "Speech"
+      ],
+      "grade_bands": [
+        "K-2",
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Subscription",
+      "source": "store",
+      "source_url": "https://www.floreotech.com/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": null,
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "wonderscope-archive",
+      "name": "Wonderscope (mobile)",
+      "publisher": "Within Unlimited",
+      "short_desc": "AR storytelling for young readers. Mobile, listed for awareness.",
+      "long_desc": "Award-winning AR story platform for younger students. Note: this is iOS/iPad AR, not Quest VR — listed for educator awareness.",
+      "subjects": [
+        "Language Arts",
+        "Reading"
+      ],
+      "grade_bands": [
+        "K-2",
+        "3-5"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://wonderscope.com/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": null,
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "elixir",
+      "name": "Elixir",
+      "publisher": "Magnopus / Meta",
+      "short_desc": "Free hand-tracking demo. Mix potions like a sorcerer.",
+      "long_desc": "Free Meta-published hand-tracking experience. Students brew potions and cast spells using only their hands. Wildly popular as a 'wow' moment for first-time VR users, especially elementary.",
+      "subjects": [
+        "Onboarding",
+        "Free Play"
+      ],
+      "grade_bands": [
+        "K-2",
+        "3-5",
+        "6-8"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/elixir/4326097620795939/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.magnopus.elixir",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "puzzling-places",
+      "name": "Puzzling Places",
+      "publisher": "Realities.io",
+      "short_desc": "3D jigsaw puzzles of real-world locations. Calm + cognitive.",
+      "long_desc": "Photogrammetry-scanned jigsaw puzzles of real cities, monuments, landscapes. Calm, meditative; great for SEL, cognitive practice, and geography awareness. Free demo with paid expansions.",
+      "subjects": [
+        "Geography",
+        "SEL",
+        "Free Play"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free demo",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/puzzling-places/4108676475825889/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "io.realities.PuzzlingPlaces",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "cubism",
+      "name": "Cubism",
+      "publisher": "Thomas Van Bouwel",
+      "short_desc": "Geometric 3D puzzle game. Spatial reasoning + math.",
+      "long_desc": "Beautiful, calm geometric puzzles where you fit colorful 3D pieces. Builds spatial reasoning, mental rotation, and is a quiet break-time favorite. Cheap one-time price.",
+      "subjects": [
+        "Math",
+        "Geometry",
+        "Spatial Reasoning"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Paid",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/cubism/3199899330060361/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.thomasvanbouwel.Cubism",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "tetris-effect",
+      "name": "Tetris Effect: Connected",
+      "publisher": "Enhance",
+      "short_desc": "Tetris like you've never experienced it. Visual + musical splendor.",
+      "long_desc": "Award-winning, transcendent Tetris remake. Music synchronized to play; visuals shift with mood. Surprisingly meditative; works in SEL contexts and break time.",
+      "subjects": [
+        "SEL",
+        "Music",
+        "Free Play"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Paid",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/tetris-effect-connected/3060469520655281/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.enhance.TetrisEffect",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "the-line",
+      "name": "The Line",
+      "publisher": "ARVORE",
+      "short_desc": "Award-winning narrative experience. Storytelling + emotion.",
+      "long_desc": "Free Tribeca-acclaimed narrative VR experience. Cinematic, emotional storytelling about a 1940s Brazilian shop owner. Excellent for film, language arts, and creative writing units.",
+      "subjects": [
+        "Language Arts",
+        "Art",
+        "Storytelling"
+      ],
+      "grade_bands": [
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/the-line/3308898262515921/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.arvore.theline",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "notes-on-blindness",
+      "name": "Notes on Blindness",
+      "publisher": "ARTE / ARCHER'S MARK",
+      "short_desc": "Sensory experience of going blind. Empathy education.",
+      "long_desc": "Free, multi-award-winning experience based on real audio diaries of John Hull. Visualizes what blindness sounds like. Extraordinary for empathy curriculum, accessibility units, and Disability Studies.",
+      "subjects": [
+        "SEL",
+        "Health",
+        "Accessibility",
+        "Social Studies"
+      ],
+      "grade_bands": [
+        "9-12"
+      ],
+      "age_rating": "E10+",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/notes-on-blindness/1414996491972490/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.archers.notesonblindness",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "traveling-while-black",
+      "name": "Traveling While Black",
+      "publisher": "Felix & Paul Studios",
+      "short_desc": "Documentary VR on Black travel in segregated America.",
+      "long_desc": "Free Emmy-winning documentary VR. Sit at Ben's Chili Bowl in Washington D.C. while Civil Rights veterans share their stories of travel during segregation. Powerful supplement to US history units.",
+      "subjects": [
+        "History",
+        "Social Studies",
+        "Civics"
+      ],
+      "grade_bands": [
+        "9-12"
+      ],
+      "age_rating": "T",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/traveling-while-black/2160651597384246/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.felixandpaul.travelingwhileblack",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "old-friends",
+      "name": "Old Friends",
+      "publisher": "Glimpse Group",
+      "short_desc": "Hangout with friendly senior dogs at a real sanctuary.",
+      "long_desc": "Free Tribeca-Award-winning experience visiting a real-life senior dog sanctuary. Surprisingly therapeutic, used in SEL, grief processing, animal-assisted therapy contexts.",
+      "subjects": [
+        "SEL",
+        "Health",
+        "Free Play"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/old-friends/2706619789426942/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.glimpsegroup.oldfriends",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "we-are-coral",
+      "name": "We Are Coral",
+      "publisher": "Bullitt Productions",
+      "short_desc": "Climate change + reef ecology. National Geographic-style.",
+      "long_desc": "Free underwater experience exploring coral reefs and the impact of climate change. Excellent for ecology, climate science, and ocean stewardship units.",
+      "subjects": [
+        "Science",
+        "Ecology",
+        "Climate"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/we-are-coral/4691619020863681/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.bullitt.wearecoral",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "smithsonian-tours",
+      "name": "Smithsonian Tours (YouTube VR)",
+      "publisher": "Smithsonian / via YouTube VR",
+      "short_desc": "Free virtual museum tours via YouTube VR's 360° catalog.",
+      "long_desc": "The Smithsonian has dozens of free 360° tour videos on YouTube. With YouTube VR (separately listed) installed, students can virtually walk through every Smithsonian wing. Searchable directly inside YouTube VR.",
+      "subjects": [
+        "History",
+        "Art",
+        "Science",
+        "Multi-subject"
+      ],
+      "grade_bands": [
+        "3-5",
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "E",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.youtube.com/user/smithsonian",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": null,
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "the-under-presents",
+      "name": "The Under Presents",
+      "publisher": "Tender Claws",
+      "short_desc": "Live-actor narrative VR. Theater + storytelling.",
+      "long_desc": "Critically acclaimed narrative VR with live-actor performances at scheduled times. Excellent for theater arts, creative writing, and digital narrative units. Free.",
+      "subjects": [
+        "Art",
+        "Storytelling",
+        "Theater"
+      ],
+      "grade_bands": [
+        "9-12"
+      ],
+      "age_rating": "T",
+      "license": "Free",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/the-under-presents/2287058218014598/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.tenderclaws.theunderpresents",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    },
+    {
+      "id": "kingspray-graffiti",
+      "name": "Kingspray Graffiti",
+      "publisher": "Infectious Ape",
+      "short_desc": "Realistic graffiti simulator. Public art + creative expression.",
+      "long_desc": "Realistic spray-paint simulator on virtual walls. Used in art programs as a digital-graffiti / mural-design tool. Multiplayer collaboration mode. Paid.",
+      "subjects": [
+        "Art",
+        "Creative"
+      ],
+      "grade_bands": [
+        "6-8",
+        "9-12"
+      ],
+      "age_rating": "T",
+      "license": "Paid",
+      "source": "store",
+      "source_url": "https://www.meta.com/experiences/kingspray-graffiti/3092248950841078/",
+      "apk_url": null,
+      "apk_sha256": null,
+      "apk_size_bytes": null,
+      "package": "com.InfectiousApe.Kingspray",
+      "thumbnail_url": null,
+      "screenshots": [],
+      "recommended": false
+    }
+  ]
+}
