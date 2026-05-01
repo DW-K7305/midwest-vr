@@ -42,6 +42,10 @@ export interface AppSettings {
   config_dir_override: string | null;
   online_catalog_enabled: boolean;
   catalog_url: string;
+  /** Saved wireless pairings — round-tripped so the Settings page doesn't wipe them. */
+  paired_wireless: PairedHeadset[];
+  /** Saved enrollment profiles. */
+  profiles: Profile[];
 }
 
 export type InstallSource = "sideload" | "store";
@@ -115,6 +119,15 @@ export interface PairedHeadset {
   ip: string;
 }
 
+/** Mirrors src-tauri/src/mdns_discovery.rs::DiscoveredHeadset */
+export interface DiscoveredHeadset {
+  ip: string;
+  port: number;
+  hostname: string;
+  /** USB serial we read after connecting; null if we couldn't verify. */
+  verified_serial: string | null;
+}
+
 export interface StorageInfo {
   portable: boolean;
   config_path: string;
@@ -132,3 +145,31 @@ export interface KioskResult {
   ok: boolean;
   error: string | null;
 }
+
+/** Mirrors src-tauri/src/profile.rs::Profile.
+ *  A saved bundle of headset configuration that can be applied with one click.
+ */
+export interface Profile {
+  id: string;
+  name: string;
+  description: string;
+  username: string;
+  headset_name: string;
+  wifi: WifiCreds | null;
+  install_apps: string[]; // catalog app IDs
+  remove_packages: string[]; // packages to uninstall
+  kiosk_app: string | null;
+  launcher: LauncherConfig | null;
+  launcher_apk_path: string | null;
+}
+
+export type ProfileApplyEvent =
+  | { type: "start"; serial: string; profile_id: string }
+  | {
+      type: "step";
+      serial: string;
+      step: string;
+      status: "running" | "ok" | "skipped" | "fail";
+      message: string;
+    }
+  | { type: "done"; serial: string; ok_steps: number; fail_steps: number };

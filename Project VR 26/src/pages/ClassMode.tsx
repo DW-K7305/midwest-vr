@@ -20,7 +20,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -218,17 +217,14 @@ export function ClassMode() {
       toast.success("Launcher already installed everywhere.");
       return;
     }
-    const apkPath = await openDialog({
-      multiple: false,
-      filters: [{ name: "Android Package", extensions: ["apk"] }],
-      title: "Select MidWest-VR Launcher APK",
-    });
-    if (!apkPath || Array.isArray(apkPath)) return;
     setBusy("locking"); // reuse spinner
     try {
-      await api.launcherPush(
+      // Phase 43: use the launcher APK that's bundled inside this .app at
+      // build time. No file picker, no manual APK path. If the .app was
+      // built without a bundled APK (CI placeholder case), the backend
+      // returns a clear error explaining how to fix it.
+      await api.launcherPushBundled(
         headsetsNeedingLauncher,
-        apkPath as string,
         {
           school_name: "",
           greeting: "",
@@ -238,7 +234,9 @@ export function ClassMode() {
         true // set as home
       );
       toast.success(
-        `Launcher pushed to ${headsetsNeedingLauncher.length} headset(s). You can now lock them.`
+        `Launcher installed on ${headsetsNeedingLauncher.length} headset${
+          headsetsNeedingLauncher.length === 1 ? "" : "s"
+        }. You can now lock them.`
       );
       qc.invalidateQueries({ queryKey: ["launcher_installed_all"] });
     } catch (e: unknown) {

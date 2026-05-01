@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PageHeader } from "@/components/PageHeader";
+import { SubNav, SETUP_NAV } from "@/components/SubNav";
 import { DevicePicker } from "@/components/DevicePicker";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -103,8 +104,8 @@ export function Wireless() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader
-        title="Wireless"
-        subtitle="Pair a Quest 2 over USB once — manage it over Wi-Fi after that"
+        title="Pair Wireless"
+        subtitle="One-time USB pair → headset stays connected over Wi-Fi forever after. Or just use the section on your Dashboard."
         right={
           <Button variant="outline" size="sm" onClick={reconnectAll}>
             <RefreshCw className="h-4 w-4 mr-2" />
@@ -112,6 +113,7 @@ export function Wireless() {
           </Button>
         }
       />
+      <SubNav items={SETUP_NAV} />
       <div className="flex-1 overflow-y-auto p-6 space-y-4 max-w-4xl">
         {/* How it works */}
         <Card>

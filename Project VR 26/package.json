@@ -1,7 +1,7 @@
 {
   "name": "midwest-vr",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.46.0",
   "type": "module",
   "description": "Locally-managed Meta Quest 2 fleet manager. Tauri 2 + React.",
   "scripts": {

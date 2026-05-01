@@ -32,6 +32,11 @@ pub struct AppSettings {
     /// Headsets we've paired wirelessly. Auto-reconnected on launch.
     #[serde(default)]
     pub paired_wireless: Vec<PairedHeadset>,
+    /// Saved enrollment profiles. Each is a 1-click bundle of headset
+    /// settings + apps + kiosk + launcher config that can be applied to any
+    /// connected headset. See `profile.rs` for the schema.
+    #[serde(default)]
+    pub profiles: Vec<crate::profile::Profile>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -63,6 +68,7 @@ impl Default for AppSettings {
             online_catalog_enabled: false,
             catalog_url: default_catalog_url(),
             paired_wireless: Vec::new(),
+            profiles: Vec::new(),
         }
     }
 }

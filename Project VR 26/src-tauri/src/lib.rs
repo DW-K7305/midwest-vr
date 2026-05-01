@@ -11,7 +11,9 @@ mod discover;
 mod error;
 mod kiosk;
 mod launcher;
+mod mdns_discovery;
 mod network;
+mod profile;
 mod settings;
 mod setup;
 mod wifi;
@@ -25,6 +27,8 @@ use crate::discover::BatchEvent;
 use crate::error::{AppError, Result};
 use crate::kiosk::KioskResult;
 use crate::launcher::{LauncherConfig, PushEvent as LauncherPushEvent};
+use crate::mdns_discovery::DiscoveredHeadset;
+use crate::profile::{Profile, ProfileApplyEvent};
 use crate::network::LogEntry as NetLogEntry;
 use crate::settings::{AppSettings, PairedHeadset, SettingsStore, StorageInfo};
 use crate::wifi::WifiCreds;
@@ -313,6 +317,64 @@ async fn launcher_push(
     .await
 }
 
+/// Resolve the path to the launcher APK that's bundled inside the .app at
+/// build time. Returns `Ok(None)` if no APK was bundled (zero-byte placeholder
+/// or missing) so callers can decide whether to fall back to a file picker.
+fn resolve_bundled_launcher_apk(app: &AppHandle) -> Result<Option<PathBuf>> {
+    let resource_dir = app
+        .path()
+        .resource_dir()
+        .map_err(|e| AppError::Config(format!("resource_dir: {e}")))?;
+    let apk = resource_dir.join("midwest-vr-launcher.apk");
+    // The CI placeholder is zero bytes — treat that as "no APK bundled".
+    match std::fs::metadata(&apk) {
+        Ok(meta) if meta.len() > 0 => Ok(Some(apk)),
+        _ => Ok(None),
+    }
+}
+
+/// Returns true if a real launcher APK was bundled inside the app at build
+/// time. The Class Mode UI uses this to decide whether to show a "Select APK
+/// file…" dialog or just silently push the bundled one.
+#[tauri::command]
+fn launcher_bundled_available(app: AppHandle) -> Result<bool> {
+    Ok(resolve_bundled_launcher_apk(&app)?.is_some())
+}
+
+/// Push the bundled launcher APK + config to the given serials. No file
+/// picker, no manual APK path — uses the APK that was baked into the .app
+/// at build time. Errors with a clear message if the bundled APK is missing
+/// (e.g., a stripped CI build).
+#[tauri::command]
+async fn launcher_push_bundled(
+    app: AppHandle,
+    serials: Vec<String>,
+    config: LauncherConfig,
+    set_as_home: bool,
+) -> Result<()> {
+    let apk = resolve_bundled_launcher_apk(&app)?.ok_or_else(|| {
+        AppError::Config(
+            "The launcher APK isn't bundled in this build. Build the launcher \
+             via the GitHub Actions workflow and re-build the Mac app, or use \
+             'Push Launcher (custom APK)' in Settings to pick one manually."
+                .into(),
+        )
+    })?;
+    let adb_path = resolve_adb_path(&app)?;
+    let app_handle = app.clone();
+    launcher::push_many(
+        &adb_path,
+        &serials,
+        &apk,
+        &config,
+        set_as_home,
+        move |evt: LauncherPushEvent| {
+            let _ = app_handle.emit("launcher_push_event", evt);
+        },
+    )
+    .await
+}
+
 // ----- Phase 29: Headset Setup Wizard -----
 
 #[tauri::command]
@@ -432,6 +494,124 @@ async fn wireless_reconnect_all(
     Ok(wireless::reconnect_all(&adb_path, &ips).await)
 }
 
+// ----- Phase 40: Profile system -----
+
+#[tauri::command]
+fn profile_list(state: State<'_, AppState>) -> Vec<Profile> {
+    state.settings.snapshot().profiles
+}
+
+#[tauri::command]
+fn profile_save(state: State<'_, AppState>, profile: Profile) -> Result<Vec<Profile>> {
+    let mut s = state.settings.snapshot();
+    if let Some(idx) = s.profiles.iter().position(|p| p.id == profile.id) {
+        s.profiles[idx] = profile;
+    } else {
+        s.profiles.push(profile);
+    }
+    state.settings.update(s.clone())?;
+    Ok(s.profiles)
+}
+
+#[tauri::command]
+fn profile_delete(state: State<'_, AppState>, id: String) -> Result<Vec<Profile>> {
+    let mut s = state.settings.snapshot();
+    s.profiles.retain(|p| p.id != id);
+    state.settings.update(s.clone())?;
+    Ok(s.profiles)
+}
+
+#[tauri::command]
+async fn profile_apply(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    serial: String,
+    profile_id: String,
+) -> Result<()> {
+    let snap = state.settings.snapshot();
+    let profile = snap
+        .profiles
+        .iter()
+        .find(|p| p.id == profile_id)
+        .cloned()
+        .ok_or_else(|| AppError::Config(format!("Profile '{}' not found", profile_id)))?;
+    let adb_path = resolve_adb_path(&app)?;
+    let app_handle = app.clone();
+    let catalog = state.catalog.clone();
+    profile::apply(&adb_path, &serial, &profile, &catalog, move |evt: ProfileApplyEvent| {
+        let _ = app_handle.emit("profile_apply_event", evt);
+    })
+    .await?;
+    Ok(())
+}
+
+#[tauri::command]
+async fn profile_devmode_check(app: AppHandle, serial: String) -> Result<bool> {
+    let adb_path = resolve_adb_path(&app)?;
+    profile::dev_mode_check(&adb_path, &serial).await
+}
+
+#[tauri::command]
+async fn profile_current_device_name(app: AppHandle, serial: String) -> Result<String> {
+    let adb_path = resolve_adb_path(&app)?;
+    profile::current_device_name(&adb_path, &serial).await
+}
+
+// ----- Phase 42: mDNS discovery -----
+
+/// Browse the local network for Quest 2 headsets advertising wireless ADB.
+/// Verifies each discovered candidate's serial before returning so the UI
+/// can match against saved pairings. Default timeout 3000ms.
+#[tauri::command]
+async fn wireless_discover_local(
+    app: AppHandle,
+    timeout_ms: Option<u64>,
+) -> Result<Vec<DiscoveredHeadset>> {
+    let adb_path = resolve_adb_path(&app)?;
+    let timeout = timeout_ms.unwrap_or(3000);
+    Ok(mdns_discovery::discover_and_verify(&adb_path, timeout).await)
+}
+
+/// "Find me on whatever network I'm on now" — runs mDNS discovery, then for
+/// every saved paired headset whose serial matches a discovered device,
+/// updates the saved IP. Returns the count of pairings that were updated.
+/// This is the one-button "I moved buildings, fix yourself" command.
+#[tauri::command]
+async fn wireless_relocate(
+    app: AppHandle,
+    state: State<'_, AppState>,
+) -> Result<usize> {
+    let adb_path = resolve_adb_path(&app)?;
+    let discovered = mdns_discovery::discover_and_verify(&adb_path, 3500).await;
+    if discovered.is_empty() {
+        return Ok(0);
+    }
+    let mut s = state.settings.snapshot();
+    let mut updated = 0usize;
+    for d in &discovered {
+        let serial = match &d.verified_serial {
+            Some(s) => s,
+            None => continue,
+        };
+        if let Some(entry) = s.paired_wireless.iter_mut().find(|p| &p.serial == serial) {
+            if entry.ip != d.ip {
+                tracing::info!(
+                    "wireless relocate: {} IP {} -> {} (via mDNS)",
+                    entry.label,
+                    entry.ip,
+                    d.ip
+                );
+                entry.ip = d.ip.clone();
+                updated += 1;
+            }
+        }
+    }
+    if updated > 0 {
+        state.settings.update(s)?;
+    }
+    Ok(updated)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tracing_subscriber::fmt()
@@ -486,6 +666,8 @@ pub fn run() {
             network_clear_log,
             network_allowed_hosts,
             launcher_push,
+            launcher_push_bundled,
+            launcher_bundled_available,
             headset_rename,
             headset_reboot,
             headset_power_off,
@@ -498,6 +680,14 @@ pub fn run() {
             wireless_forget,
             wireless_list,
             wireless_reconnect_all,
+            wireless_discover_local,
+            wireless_relocate,
+            profile_list,
+            profile_save,
+            profile_delete,
+            profile_apply,
+            profile_devmode_check,
+            profile_current_device_name,
         ])
         .setup(|app| {
             // Ensure the bundled adb is executable. macOS preserves bits when
@@ -511,10 +701,29 @@ pub fn run() {
                     let _ = std::fs::set_permissions(&p, perms);
                 }
             }
-            // Best-effort: kick the adb server now so first-frame device list is fast,
-            // then run a forever-loop that silently retries wireless reconnect every
-            // 30 seconds. Once a headset is paired over USB, this loop is what keeps
-            // it talking to the Mac for the rest of the day with zero user action.
+            // Self-healing wireless. THREE cooperating mechanisms:
+            //
+            //   1. ADAPTIVE BACKGROUND LOOP. Every paired headset has its IP
+            //      stored in settings. We loop forever, calling `adb connect`
+            //      on each saved IP. The loop is idempotent — `adb connect` to
+            //      an already-connected device is a no-op, so we can run it
+            //      aggressively without thrashing. Interval is adaptive: 8s
+            //      when ANY paired headset is currently offline, 30s when
+            //      everything is already connected.
+            //
+            //   2. USB AUTO-HEAL. (Phase 41) When a paired headset shows up on
+            //      USB at any time — re-plug, fresh boot, anything — we
+            //      automatically re-run the pair flow under the hood. This
+            //      refreshes its `adb tcpip 5555` daemon (which Meta wipes on
+            //      every reboot) AND captures its CURRENT Wi-Fi IP (which
+            //      DHCP can change). The user's saved record gets updated
+            //      silently. Net effect: pair once over USB EVER, and any
+            //      future glitch is fixed by just plugging in.
+            //
+            //   3. ON-DEMAND TRIGGER. The frontend listens for window focus
+            //      and calls `wireless_reconnect_all` directly so a teacher
+            //      flipping back to the app sees their fleet come online
+            //      within ~1 second instead of waiting for the next loop tick.
             let app_handle = app.handle().clone();
             let settings_handle = app.state::<AppState>().settings.clone();
             tauri::async_runtime::spawn(async move {
@@ -529,19 +738,89 @@ pub fn run() {
                 // Initial pass — short delay so the UI is up before we yell about devices.
                 tokio::time::sleep(std::time::Duration::from_millis(500)).await;
                 loop {
-                    let paired_ips: Vec<String> = settings_handle
-                        .snapshot()
-                        .paired_wireless
-                        .into_iter()
-                        .map(|p| p.ip)
-                        .collect();
-                    if !paired_ips.is_empty() {
-                        // `reconnect_all` is idempotent — `adb connect` to an
-                        // already-connected target is a no-op, so we don't
-                        // thrash anything by re-running this every 30s.
-                        let _ok = wireless::reconnect_all(&adb_path, &paired_ips).await;
+                    let paired = settings_handle.snapshot().paired_wireless;
+                    let mut sleep_secs: u64 = 30;
+
+                    if !paired.is_empty() {
+                        // Step A: Snapshot which paired serials are currently on USB.
+                        let usb_serials: std::collections::HashSet<String> =
+                            devices::list_basic(&adb_path)
+                                .await
+                                .unwrap_or_default()
+                                .into_iter()
+                                .filter(|d| {
+                                    d.state == "device" && d.connection_type == "usb"
+                                })
+                                .map(|d| d.serial)
+                                .collect();
+
+                        // Step B: For each paired headset that IS on USB right now,
+                        // re-run the pair flow if its current saved IP isn't
+                        // reachable. This is the auto-heal.
+                        let mut healed_any = false;
+                        for p in &paired {
+                            if !usb_serials.contains(&p.serial) {
+                                continue;
+                            }
+                            // Cheap probe: if connecting to the saved IP works,
+                            // no heal needed.
+                            if wireless::connect(&adb_path, &p.ip).await.is_ok() {
+                                continue;
+                            }
+                            // The saved IP is dead. Re-pair over USB to refresh
+                            // both the headset's TCP/IP daemon AND our IP record.
+                            match wireless::pair_via_usb(&adb_path, &p.serial).await {
+                                Ok(new_ip) => {
+                                    let mut s = settings_handle.snapshot();
+                                    if let Some(entry) = s
+                                        .paired_wireless
+                                        .iter_mut()
+                                        .find(|x| x.serial == p.serial)
+                                    {
+                                        if entry.ip != new_ip {
+                                            tracing::info!(
+                                                "wireless self-heal: {} IP {} -> {}",
+                                                entry.label,
+                                                entry.ip,
+                                                new_ip
+                                            );
+                                            entry.ip = new_ip;
+                                            let _ = settings_handle.update(s);
+                                        }
+                                    }
+                                    healed_any = true;
+                                }
+                                Err(e) => {
+                                    tracing::debug!(
+                                        "wireless self-heal failed for {}: {}",
+                                        p.serial,
+                                        e
+                                    );
+                                }
+                            }
+                        }
+
+                        // Step C: Reconnect to every paired headset using the
+                        // (possibly just-updated) saved IPs.
+                        let paired_ips: Vec<String> = settings_handle
+                            .snapshot()
+                            .paired_wireless
+                            .into_iter()
+                            .map(|p| p.ip)
+                            .collect();
+                        let connected =
+                            wireless::reconnect_all(&adb_path, &paired_ips).await;
+
+                        // Adaptive cadence: faster if something is still offline
+                        // OR we just healed (give the daemon a beat to settle).
+                        if healed_any {
+                            sleep_secs = 4;
+                        } else if connected.len() < paired_ips.len() {
+                            sleep_secs = 8;
+                        }
                     }
-                    tokio::time::sleep(std::time::Duration::from_secs(30)).await;
+
+                    tokio::time::sleep(std::time::Duration::from_secs(sleep_secs)).await;
                 }
             });
             Ok(())

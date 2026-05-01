@@ -1,5 +1,6 @@
 import { useDevices } from "@/hooks/useDevices";
 import { PageHeader } from "@/components/PageHeader";
+import { SubNav, SETUP_NAV } from "@/components/SubNav";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -68,9 +69,10 @@ export function Connect() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader
-        title="Connect a headset"
-        subtitle="One-time setup per Meta Quest 2 — about 90 seconds"
+        title="First-time connection"
+        subtitle="One-time setup per Meta Quest 2 — about 90 seconds. Follow the steps in order."
       />
+      <SubNav items={SETUP_NAV} />
       <div className="flex-1 p-6 overflow-y-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-4">

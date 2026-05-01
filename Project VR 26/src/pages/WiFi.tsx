@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
+import { SubNav, SETUP_NAV } from "@/components/SubNav";
 import { DevicePicker } from "@/components/DevicePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,9 +47,10 @@ export function WifiPage() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader
-        title="Wi-Fi"
-        subtitle="Send Wi-Fi credentials to a headset"
+        title="Push Wi-Fi credentials"
+        subtitle="Type your network info once on this Mac — it'll be sent over USB to the selected headset"
       />
+      <SubNav items={SETUP_NAV} />
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-64 shrink-0 border-r border-border p-4 space-y-4">
           <DevicePicker selected={serial} onSelect={setSerial} />

@@ -33,6 +33,12 @@ sha2 = "0.10"
 hex = "0.4"
 url = "2"
 futures-util = "0.3"
+# mDNS / Bonjour service discovery — used to find paired Quest 2 headsets on
+# whatever local network the user has wandered onto, without knowing their
+# DHCP-assigned IP in advance. Pure-Rust, no native deps. Uses default
+# features (sync API + crossbeam channels) since we wrap browse in
+# tokio::task::spawn_blocking anyway.
+mdns-sd = "0.13"
 
 [profile.release]
 codegen-units = 1

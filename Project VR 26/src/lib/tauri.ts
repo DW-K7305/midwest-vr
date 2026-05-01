@@ -9,12 +9,15 @@ import type {
   Catalog,
   CatalogApp,
   Device,
+  DiscoveredHeadset,
   InstalledApp,
   KioskResult,
   LauncherConfig,
   LauncherPushEvent,
   NetworkLogEntry,
   PairedHeadset,
+  Profile,
+  ProfileApplyEvent,
   StorageInfo,
   WifiCreds,
 } from "@/types";
@@ -76,7 +79,7 @@ export const api = {
   networkClearLog: () => invoke<void>("network_clear_log"),
   networkAllowedHosts: () => invoke<string[]>("network_allowed_hosts"),
 
-  // Launcher push (Phase 28)
+  // Launcher push (Phase 28 + Phase 43 bundled variant)
   launcherPush: (
     serials: string[],
     apkPath: string,
@@ -89,6 +92,18 @@ export const api = {
       config,
       setAsHome,
     }),
+  /** Push the launcher APK that was bundled inside this .app at build time —
+   *  no file picker required. Returns an error if the build didn't include
+   *  the APK (rare; CI placeholder case). */
+  launcherPushBundled: (
+    serials: string[],
+    config: LauncherConfig,
+    setAsHome: boolean
+  ) =>
+    invoke<void>("launcher_push_bundled", { serials, config, setAsHome }),
+  /** True when the running .app has a real launcher APK bundled. Class Mode
+   *  uses this to decide whether to show the "Select APK file" dialog. */
+  launcherBundledAvailable: () => invoke<boolean>("launcher_bundled_available"),
 
   // Headset Setup Wizard (Phase 29)
   headsetRename: (serial: string, name: string) =>
@@ -114,7 +129,31 @@ export const api = {
   wirelessList: () => invoke<PairedHeadset[]>("wireless_list"),
   wirelessReconnectAll: () =>
     invoke<string[]>("wireless_reconnect_all"),
+  wirelessDiscoverLocal: (timeoutMs?: number) =>
+    invoke<DiscoveredHeadset[]>("wireless_discover_local", { timeoutMs }),
+  /** "I moved buildings" — discover on this network, update saved IPs, return count. */
+  wirelessRelocate: () => invoke<number>("wireless_relocate"),
+
+  // Profiles (Phase 40)
+  profileList: () => invoke<Profile[]>("profile_list"),
+  profileSave: (profile: Profile) =>
+    invoke<Profile[]>("profile_save", { profile }),
+  profileDelete: (id: string) => invoke<Profile[]>("profile_delete", { id }),
+  profileApply: (serial: string, profileId: string) =>
+    invoke<void>("profile_apply", { serial, profileId }),
+  profileDevModeCheck: (serial: string) =>
+    invoke<boolean>("profile_devmode_check", { serial }),
+  profileCurrentDeviceName: (serial: string) =>
+    invoke<string>("profile_current_device_name", { serial }),
 };
+
+export function onProfileApplyEvent(
+  fn: (e: ProfileApplyEvent) => void
+): Promise<UnlistenFn> {
+  return listen<ProfileApplyEvent>("profile_apply_event", (evt) =>
+    fn(evt.payload)
+  );
+}
 
 export function onDiscoverEvent(
   fn: (e: BatchEvent) => void

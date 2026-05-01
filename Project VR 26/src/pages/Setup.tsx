@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { open as openShell } from "@tauri-apps/plugin-shell";
 import { PageHeader } from "@/components/PageHeader";
+import { SubNav, SETUP_NAV } from "@/components/SubNav";
 import { DevicePicker } from "@/components/DevicePicker";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -61,9 +62,10 @@ export function Setup() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader
-        title="Headset Setup"
-        subtitle="Things you'd normally do from the Meta phone app — done from this Mac instead"
+        title="Headset Wizard"
+        subtitle="Rename, screenshot, set the clock, restart, or wipe — replaces ~80% of what you'd do in the Meta phone app"
       />
+      <SubNav items={SETUP_NAV} />
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-64 shrink-0 border-r border-border p-4 space-y-4">
           <DevicePicker selected={serial} onSelect={setSerial} />

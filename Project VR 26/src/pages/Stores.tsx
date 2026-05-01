@@ -2,6 +2,7 @@ import { useState } from "react";
 import { open as openShell } from "@tauri-apps/plugin-shell";
 import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "@/components/PageHeader";
+import { SubNav, APPS_NAV } from "@/components/SubNav";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -121,8 +122,9 @@ export function Stores() {
     <div className="flex flex-col h-full">
       <PageHeader
         title="Stores"
-        subtitle="External sideload directories + paste-an-APK shortcut"
+        subtitle="Other places to find Quest apps when the curated catalog doesn't have what you need"
       />
+      <SubNav items={APPS_NAV} />
       <div className="flex-1 overflow-y-auto p-6 space-y-4 max-w-4xl">
         {!onlineEnabled && (
           <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm flex items-start gap-3">

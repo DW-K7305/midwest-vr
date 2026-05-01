@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import { PageHeader } from "@/components/PageHeader";
+import { SubNav, APPS_NAV } from "@/components/SubNav";
 import { DevicePicker } from "@/components/DevicePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -203,6 +204,7 @@ export function Apps() {
           </div>
         }
       />
+      <SubNav items={APPS_NAV} />
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-64 shrink-0 border-r border-border p-4 space-y-4">
           <DevicePicker selected={serial} onSelect={setSerial} />

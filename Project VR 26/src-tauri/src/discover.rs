@@ -27,7 +27,11 @@ where
     let url = app
         .apk_url
         .as_deref()
-        .ok_or_else(|| AppError::Other(anyhow::anyhow!("no apk_url in catalog entry {}", app.id)))?;
+        .ok_or_else(|| AppError::Other(anyhow::anyhow!(
+            "{} can't be sideloaded directly — install it from the Meta Quest Store on the headset, or download the APK manually from {} and use 'Install APK from file' on the Apps page.",
+            app.name,
+            app.source_url
+        )))?;
 
     let cache = apk_cache_dir();
     std::fs::create_dir_all(&cache)?;

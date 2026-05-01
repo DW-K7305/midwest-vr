@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { PageHeader } from "@/components/PageHeader";
+import { SubNav, APPS_NAV } from "@/components/SubNav";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -193,9 +194,10 @@ export function Discover() {
     return (
       <div className="flex flex-col h-full">
         <PageHeader
-          title="Discover"
-          subtitle="Curated K-12 Quest 2 apps — sideload + Quest Store guidance"
+          title="Browse Catalog"
+          subtitle="Curated K-12 apps — verified safe, direct download, no Meta account needed"
         />
+        <SubNav items={APPS_NAV} />
         <div className="flex-1 flex items-center justify-center p-6">
           <Card className="max-w-md">
             <CardContent className="p-6 text-center">
@@ -232,11 +234,11 @@ export function Discover() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader
-        title="Discover"
+        title="Browse Catalog"
         subtitle={
           cached.data
-            ? `${apps.length} curated apps • last updated ${cached.data.last_updated}`
-            : "Curated K-12 Quest 2 apps"
+            ? `${apps.length} curated K-12 apps • last updated ${cached.data.last_updated}`
+            : "Curated K-12 Quest 2 apps — verified safe, install directly"
         }
         right={
           <div className="flex items-center gap-2">
@@ -259,6 +261,7 @@ export function Discover() {
           </div>
         }
       />
+      <SubNav items={APPS_NAV} />
 
       <div className="flex-1 overflow-y-auto">
         {/* Filter strip */}
@@ -373,7 +376,7 @@ export function Discover() {
                   <ExternalLink className="h-3.5 w-3.5 mr-1" />
                   Publisher page
                 </a>
-                {detail.source === "sideload" ? (
+                {detail.source === "sideload" && detail.apk_url ? (
                   <Button
                     onClick={() => {
                       setDetail(null);
@@ -383,6 +386,18 @@ export function Discover() {
                   >
                     <Download className="h-4 w-4 mr-2" />
                     Install on all online headsets ({onlineDevices.length})
+                  </Button>
+                ) : detail.source === "sideload" ? (
+                  // Sideload flagged but no direct APK URL — link to publisher
+                  // releases page so the user can download the APK manually
+                  // and use Apps → Install APK from file. Honest UX instead
+                  // of a broken Install button.
+                  <Button
+                    variant="outline"
+                    onClick={() => window.open(detail.source_url, "_blank")}
+                  >
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Get APK from publisher
                   </Button>
                 ) : (
                   <Button variant="outline" disabled>

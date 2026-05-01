@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import { PageHeader } from "@/components/PageHeader";
+import { SubNav, SETUP_NAV } from "@/components/SubNav";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -120,9 +121,10 @@ export function LauncherPage() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader
-        title="In-Headset Launcher"
-        subtitle="Push the MidWest-VR Launcher APK + config to every plugged-in headset"
+        title="In-headset Launcher"
+        subtitle="Replace Quest's stock home screen with our custom one — required for Class Mode lock to actually work"
       />
+      <SubNav items={SETUP_NAV} />
       <div className="flex-1 overflow-y-auto p-6 space-y-4 max-w-3xl">
         {/* APK picker */}
         <Card>

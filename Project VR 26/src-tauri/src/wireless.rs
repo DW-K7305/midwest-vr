@@ -10,6 +10,13 @@ const TCP_PORT: u16 = 5555;
 
 /// Switch the (currently USB-connected) headset's adb daemon to TCP/IP mode
 /// and discover its Wi-Fi IP. Returns the IP as a string for caller to persist.
+///
+/// Phase 41 addition: also sets `adb_wifi_enabled = 1` in the headset's
+/// global settings. This is the Android 11+ flag that tells the OS to
+/// re-enable wireless ADB automatically on every boot. Without this, the
+/// `adb tcpip` mode wipes whenever the headset reboots and requires a USB
+/// re-pair. With this, the headset itself self-heals on its end — wireless
+/// ADB comes back online about 30 seconds after every cold boot.
 pub async fn pair_via_usb(adb_path: &Path, serial: &str) -> Result<String> {
     // 1. Read the headset's wlan0 IP. Two strategies, fallback chain:
     //    a) `ip -4 addr show wlan0` — modern Android, clean
@@ -21,13 +28,25 @@ pub async fn pair_via_usb(adb_path: &Path, serial: &str) -> Result<String> {
         )));
     }
 
-    // 2. Put the daemon in TCP mode.
+    // 2. Put the daemon in TCP mode for THIS session.
     let _ = adb(adb_path, &["-s", serial, "tcpip", &TCP_PORT.to_string()]).await?;
 
-    // 3. Brief pause for daemon to switch.
+    // 3. Make wireless ADB PERSIST across reboots. This is the line that
+    //    turns this from a "works until you power-cycle the headset" feature
+    //    into "works forever after one USB pair." Best-effort — older
+    //    firmware ignores the setting silently, which is fine because we
+    //    still got the per-session tcpip mode in step 2.
+    let _ = adb_shell(
+        adb_path,
+        serial,
+        &["settings", "put", "global", "adb_wifi_enabled", "1"],
+    )
+    .await;
+
+    // 4. Brief pause for daemon to switch.
     tokio::time::sleep(std::time::Duration::from_millis(800)).await;
 
-    // 4. Try connecting now so the user immediately sees it work.
+    // 5. Try connecting now so the user immediately sees it work.
     let _ = adb(adb_path, &["connect", &format!("{}:{}", ip, TCP_PORT)]).await;
 
     Ok(ip)
@@ -95,19 +114,39 @@ fn is_v4(s: &str) -> bool {
 }
 
 /// `adb connect <ip>:5555`.
+///
+/// Translates adb's terse failure output into a friendly message that hints at
+/// the actual fix. The most common failure (an "Operation timed out" from adb
+/// trying to reach a stale IP) is the case where plugging the headset into
+/// USB once will trigger the auto-heal in the setup loop and update the IP.
 pub async fn connect(adb_path: &Path, ip: &str) -> Result<()> {
     let target = format!("{}:{}", ip, TCP_PORT);
     let out = adb(adb_path, &["connect", &target]).await?;
     // adb returns 0 even when it failed; success/failure is in stdout.
     let trimmed = out.trim();
     if trimmed.starts_with("connected to") || trimmed.starts_with("already connected") {
-        Ok(())
-    } else {
-        Err(AppError::Other(anyhow::anyhow!(
-            "wireless connect failed: {}",
-            trimmed
-        )))
+        return Ok(());
     }
+    // Friendly translations for the failure modes teachers actually hit.
+    let lower = trimmed.to_ascii_lowercase();
+    let friendly = if lower.contains("timed out") || lower.contains("timeout") {
+        format!(
+            "Couldn't reach {ip}:5555. The headset's IP may have changed since pairing, \
+             or it's powered off. Plug it into USB once — we'll auto-refresh."
+        )
+    } else if lower.contains("connection refused") {
+        format!(
+            "{ip}:5555 refused the connection. The headset rebooted and lost wireless mode. \
+             Plug it into USB once — we'll auto-refresh."
+        )
+    } else if lower.contains("no route to host") || lower.contains("network is unreachable") {
+        format!(
+            "{ip}:5555 isn't reachable on this network. Make sure the headset and this Mac are on the same Wi-Fi."
+        )
+    } else {
+        format!("Wireless connect failed: {trimmed}")
+    };
+    Err(AppError::Other(anyhow::anyhow!(friendly)))
 }
 
 /// `adb disconnect <ip>:5555` (or all if ip empty).
